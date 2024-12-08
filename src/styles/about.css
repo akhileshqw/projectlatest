@@ -1,0 +1,74 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+html,body{
+    overflow-x: hidden;
+}
+.z {
+    background-position: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 360px;
+}
+.my-span {
+
+    position: absolute;
+    bottom: 250px;
+    left: 700px; 
+    font-size: 30px;
+    font-weight: bolder;
+    color: white; 
+}
+
+
+
+
+
+
+.zxc{
+    margin: 10px;
+    padding: 10px;
+    
+}
+.zxc p{
+    font-size: larger;
+}
+
+
+.jkl{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+
+
+
+
+
+@media screen and (max-width:950px) {
+    .z { 
+
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
+    }
+    span{
+        position: relative;
+    }
+    .jkl {
+        flex-direction: column;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    
+}

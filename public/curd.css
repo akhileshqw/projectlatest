@@ -1,0 +1,11 @@
+body::before {
+  
+    
+     
+     
+    /* background-image: url('your-image-path.jpg'); Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    filter: blur(100px); /* Adjust the blur effect (higher value = more blur) */
+    z-index: -1;
+}

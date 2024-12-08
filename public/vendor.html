@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="vendor.css">
+</head>
+<body>
+ 
+
+<center>
+
+    <h2>Vendor Profiles</h2>
+</center>
+
+    <div class="container">
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <h3>Filter Vendors</h3>
+
+            <!-- Filter by Rating -->
+            <h4>Rating</h4>
+            <label><input type="radio" name="rating" value="5" onclick="filterVendors()"> 5 Stars</label>
+            <label><input type="radio" name="rating" value="4" onclick="filterVendors()"> 4 Stars & Up</label>
+            <label><input type="radio" name="rating" value="3" onclick="filterVendors()"> 3 Stars & Up</label>
+            <label><input type="radio" name="rating" value="2" onclick="filterVendors()"> 2 Stars & Up</label>
+            <label><input type="radio" name="rating" value="1" onclick="filterVendors()"> 1 Star & Up</label>
+
+            <!-- Filter by Cost -->
+            <h4>Cost</h4>
+            <label><input type="checkbox" name="cost" value="low" onclick="filterVendors()"> Low</label>
+            <label><input type="checkbox" name="cost" value="medium" onclick="filterVendors()"> Medium</label>
+            <label><input type="checkbox" name="cost" value="average" onclick="filterVendors()"> Average</label>
+            <label><input type="checkbox" name="cost" value="high" onclick="filterVendors()"> High</label>
+
+            <!-- Filter by Place -->
+            <h4>Place</h4>
+            <label><input type="checkbox" name="place" value="springfield" onclick="filterVendors()"> Springfield</label>
+            <label><input type="checkbox" name="place" value="green-valley" onclick="filterVendors()"> Green Valley</label>
+            <label><input type="checkbox" name="place" value="downtown" onclick="filterVendors()"> Downtown</label>
+
+            <!-- Filter by Products Sold -->
+            <h4>Products Sold</h4>
+            <label><input type="checkbox" name="products" value="fruits" onclick="filterVendors()"> Fruits</label>
+            <label><input type="checkbox" name="products" value="vegetables" onclick="filterVendors()"> Vegetables</label>
+            <label><input type="checkbox" name="products" value="dairy" onclick="filterVendors()"> Dairy</label>
+        </div>
+
+        <!-- Vendor List Section -->
+        <div class="vendor-list" id="vendorList">
+            <!-- Vendor Card 1 -->
+            <div class="vendor-card" data-rating="5" data-cost="low" data-place="springfield" data-products="fruits,vegetables,dairy">
+                <div class="vendor-profile">
+                    <img src="user.jpg" alt="Vendor Profile">
+                </div>
+                <div class="vendor-details">
+                    <div class="vendor-name">John's Organic Store</div>
+                    <div class="rating">⭐⭐⭐⭐⭐</div>
+                    <div class="vendor-info"><strong>Products Sold:</strong> Organic Fruits, Vegetables, Dairy</div>
+                    <div class="price"><strong>Cost per Packet:</strong> Low</div>
+                    <div class="location"><strong>Location:</strong> Springfield</div>
+                    <div class="phone"><strong>Phone:</strong> <a href="tel:+911234567890">+91 12345 67890</a></div>
+                </div>
+            </div>
+
+            <!-- Vendor Card 2 -->
+            <div class="vendor-card" data-rating="4" data-cost="medium" data-place="green-valley" data-products="vegetables,dairy">
+                <div class="vendor-profile">
+                    <img src="user.jpg" alt="Vendor Profile">
+                </div>
+                <div class="vendor-details">
+                    <div class="vendor-name">Green Valley Farmers</div>
+                    <div class="rating">⭐⭐⭐⭐</div>
+                    <div class="vendor-info"><strong>Products Sold:</strong> Fresh Vegetables, Dairy</div>
+                    <div class="price"><strong>Cost per Packet:</strong> Medium</div>
+                    <div class="location"><strong>Location:</strong> Green Valley</div>
+                    <div class="phone"><strong>Phone:</strong> <a href="tel:+911234567890">+91 12345 67890</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterVendors() {
+            const selectedRating = document.querySelector('input[name="rating"]:checked')?.value;
+            const selectedCosts = Array.from(document.querySelectorAll('input[name="cost"]:checked')).map(el => el.value);
+            const selectedPlaces = Array.from(document.querySelectorAll('input[name="place"]:checked')).map(el => el.value);
+            const selectedProducts = Array.from(document.querySelectorAll('input[name="products"]:checked')).map(el => el.value);
+
+            const vendorCards = document.querySelectorAll('.vendor-card');
+
+            vendorCards.forEach(card => {
+                const cardRating = card.getAttribute('data-rating');
+                const cardCost = card.getAttribute('data-cost');
+                const cardPlace = card.getAttribute('data-place');
+                const cardProducts = card.getAttribute('data-products').split(',');
+
+                let show = true;
+
+                // Filter by rating
+                if (selectedRating && cardRating < selectedRating) {
+                    show = false;
+                }
+
+                // Filter by cost
+                if (selectedCosts.length && !selectedCosts.includes(cardCost)) {
+                    show = false;
+                }
+
+                // Filter by place
+                if (selectedPlaces.length && !selectedPlaces.includes(cardPlace)) {
+                    show = false;
+                }
+
+                // Filter by products
+                if (selectedProducts.length && !selectedProducts.some(product => cardProducts.includes(product))) {
+                    show = false;
+                }
+
+                card.style.display = show ? 'flex' : 'none';
+            });
+        }
+    </script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+    integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+    crossorigin="anonymous"></script>
+
+</body>
+</html>

@@ -1,0 +1,120 @@
+.abc{
+    font-size: 26px;
+}
+
+.mycar img{
+    object-fit: cover;
+    object-position:center;
+
+
+}
+
+.flu{
+
+/* border: 2px solid #141212; */
+height: 500px;
+display: flex;
+}
+.distyle a{
+    text-decoration: none;
+    
+}
+#wnat:hover{
+    
+}
+
+.heritage{
+     
+        margin-top: 27px;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+   
+
+}
+.vm {
+    width: 118px;
+    padding: 5px;
+    border-radius: 20px;
+    background-color: green;
+}
+.vm a{
+    text-decoration: none;
+}
+
+@media screen  and (max-width:1000px){
+
+    .heritage{
+        flex-wrap: wrap;
+
+    }
+}
+@media screen  and (max-width:540px){
+
+     
+    .abcdef ul {
+        gap: 5px;
+        flex-wrap: wrap;
+        flex-direction: row;
+    }
+
+
+}
+
+.abcdef ul li{
+    list-style:outside ;
+
+}
+.abcdef ul li:first-child{
+    list-style: none; ;
+
+}
+.display{
+    display: none;
+}
+
+.outline{
+    border: 6px white !important;
+}
+@media screen and (max-width:990px) {
+    .nav-extra{
+        margin-top: 30px;
+        /* padding: 3px; */
+        padding-bottom: 14px;
+    }
+    
+}
+
+
+@media screen and (max-width:480px) {
+.smaller{
+    width: 120vw;
+}
+.smallimg img{
+    height: 450px !important;
+    /* object-fit:fill; */
+
+}
+.smallimg{
+    text-align: center;
+
+}
+
+
+    
+}
+
+
+.task_1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.task_2{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
