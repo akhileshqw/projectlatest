@@ -12,7 +12,7 @@ import { set } from "mongoose";
 function App() {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div
         id="carouselExampleCaptions"
         className="carousel carousel-fade slide mycar smaller"
