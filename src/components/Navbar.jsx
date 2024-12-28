@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { userContext } from "../context/userContext";
 import Skeleton from "react-loading-skeleton";
 import { UserCircleIcon } from "lucide-react";
 
 const Navbar = () => {
+  const navigate=useNavigate();
   const { LoginUser } = useContext(userContext);
   const [ready, setready] = useState(false);
   const handleClick = () => {
@@ -15,6 +16,7 @@ const Navbar = () => {
       },
       credentials: "include",
     });
+    navigate("/");
     window.location.reload();
   };
   useEffect(() => {
