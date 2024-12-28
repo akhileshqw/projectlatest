@@ -6,16 +6,23 @@ import { userContext } from "../context/userContext";
 
 const Vendor = () => {
   const [vendorsList, setVendorsList] = useState([]);
-
+  const [finvendor,setfinvendor]=useState([]);
   const navigate = useNavigate();
 
   const { LoginUser } = useContext(userContext);
 
+  const filterbystar=(v)=>{
+      if(vendorsList.length!==0){
+       const  sp=vendorsList.filter((vendor) => vendor.rating >= v)
+        setfinvendor(sp)
+  }
+}
   const getVendors = async () => {
     const data = await fetch("http://localhost:3000/vendors");
     const vendorsData = await data.json();
     console.log(vendorsData);
     setVendorsList(vendorsData);
+    setfinvendor(vendorsData);
   };
   useEffect(() => {
     getVendors();
@@ -70,7 +77,7 @@ const Vendor = () => {
                   type="radio"
                   name="rating"
                   defaultValue={5}
-                  onclick="filterVendors()"
+                  onChange={()=>filterbystar(5)}
                 />{" "}
                 5 Stars
               </label>
@@ -79,7 +86,7 @@ const Vendor = () => {
                   type="radio"
                   name="rating"
                   defaultValue={4}
-                  onclick="filterVendors()"
+                  onChange={()=>filterbystar(4)}
                 />{" "}
                 4 Stars &amp; Up
               </label>
@@ -88,7 +95,7 @@ const Vendor = () => {
                   type="radio"
                   name="rating"
                   defaultValue={3}
-                  onclick="filterVendors()"
+                  onChange={()=>filterbystar(3)}
                 />{" "}
                 3 Stars &amp; Up
               </label>
@@ -97,7 +104,7 @@ const Vendor = () => {
                   type="radio"
                   name="rating"
                   defaultValue={2}
-                  onclick="filterVendors()"
+                  onChange={()=>filterbystar(2)}
                 />{" "}
                 2 Stars &amp; Up
               </label>
@@ -106,7 +113,7 @@ const Vendor = () => {
                   type="radio"
                   name="rating"
                   defaultValue={1}
-                  onclick="filterVendors()"
+                  onChange={()=>filterbystar(1)}
                 />{" "}
                 1 Star &amp; Up
               </label>
