@@ -9,6 +9,7 @@ const port = 3000;
 import nodemailer from "nodemailer";
 import "dotenv/config";
 
+
 const jwtSecret = "lasd4831231#^";
 
 // db connection

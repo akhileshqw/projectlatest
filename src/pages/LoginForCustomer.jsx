@@ -11,7 +11,7 @@ const LoginForCustomer = () => {
     const {
         register,
         handleSubmit,
-        reset,
+        resetField,
         watch,
         formState: { errors, isSubmitting, isSubmitSuccessful, isSubmitted },
     } = useForm();
@@ -23,7 +23,7 @@ const LoginForCustomer = () => {
         alert(msg);
     };
     const onSubmit = async (data) => {
-        reset();
+        // reset();
         console.log(data);
         let response = await fetch("http://localhost:3000/login", {
             method: "POST",
@@ -44,6 +44,7 @@ const LoginForCustomer = () => {
             setLoginUser(content.user);
         } else {
             failed(content.msg);
+            resetField("password")
         }
     };
 
@@ -54,7 +55,7 @@ const LoginForCustomer = () => {
                     <Navigate to={"/"} />
                 </>
             ) : (
-                
+
                 <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "80vh" }}>
     <div className="row w-100">
         {/* Login Form (Left Side) */}
