@@ -39,6 +39,7 @@ app.post("/createaccount", async (req, res) => {
         address,
         isVendor,
         work,
+        rating,
     } = req.body;
 
     const existingUser = await RegisterModel.findOne({ email });
@@ -58,6 +59,7 @@ app.post("/createaccount", async (req, res) => {
             address,
             isVendor,
             work,
+            rating,
         });
         const userObj = {
             username: firstname + " " + lastname,

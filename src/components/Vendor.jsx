@@ -29,14 +29,25 @@ const Vendor = () => {
   };
 
   return (
-    <div>
+    <div style={{ overflow: "hidden" }}>
       <>
         <center>
           <h2 style={{ color: "#333" }}>Vendor Profiles</h2>
         </center>
 
         {LoginUser ? (
-          <div className="container" style={{ display: "flex", gap: 20 }}>
+          <div
+            className="container"
+            style={{
+              display: "flex",
+              gap: 20,
+              height: "100vh",
+              overflow: "auto",
+
+              // Ensure full viewport height
+              // Prevent scroll on parent
+            }}
+          >
             {/* Filter Section */}
             <div
               style={{
@@ -45,8 +56,11 @@ const Vendor = () => {
                 borderRadius: 8,
                 boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
                 width: 250,
+                position: "sticky", // Make the sidebar sticky
+                top: "20px", // Offset from the top of the viewport
+                alignSelf: "flex-start",
               }}
-              className="filter-section"
+              className="filter-section sticky-sidebar"
             >
               <h3 style={{ color: "#333" }}>Filter Vendors</h3>
               {/* Filter by Rating */}
@@ -212,7 +226,11 @@ const Vendor = () => {
               </label>
             </div>
             {/* Vendor List Section */}
-            <div className="vendor-list" id="vendorList">
+            <div
+              className="vendor-list"
+              id="vendorList"
+              style={{ overflow: "auto" }}
+            >
               {/* Vendor Card 1 */}
 
               {vendorsList.map((vendor) => {
@@ -236,7 +254,7 @@ const Vendor = () => {
                       {/* generate a random no between in the range 1-5 */}
 
                       <div className="rating">
-                        {renderStars(Math.floor(Math.random() * 5) + 1)}
+                        {renderStars(vendor.rating + 1)}
                       </div>
                       <div className="vendor-info">
                         <strong>Products Sold:</strong> {vendor.work}
@@ -319,7 +337,7 @@ const Vendor = () => {
             </div>
           </div>
         ) : (
-          <div>kindly login to view</div>
+          <div>kindly login to view vendor profiles</div>
         )}
       </>
     </div>

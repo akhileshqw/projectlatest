@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom'
 
 const Layout = () => {
   return (
-    <>
+    <div >
   
   <Navbar />
      <div style={{paddingTop:"80px"}}>
@@ -16,7 +16,7 @@ const Layout = () => {
     
 
 
-    </>
+    </div>
   )
 }
 

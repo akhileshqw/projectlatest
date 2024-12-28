@@ -9,5 +9,6 @@ const registerSchema = new mongoose.Schema({
     address: String,
     isVendor: { type: Boolean, default: false },
     work: { type: String },
+    rating:{type:Number},
 });
 export const RegisterModel = mongoose.model("register", registerSchema);
