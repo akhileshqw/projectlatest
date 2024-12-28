@@ -5,11 +5,17 @@ import { Outlet } from 'react-router-dom'
 const Layout = () => {
   return (
     <>
-     <Navbar />
-     <div>
+  
+  <Navbar />
+     <div style={{paddingTop:"80px"}}>
+
      <Outlet /> 
 
      </div>
+
+    
+
+
     </>
   )
 }

@@ -28,6 +28,7 @@ const Navbar = () => {
       <nav
         className="navbar navbar-expand-lg bg-body-tertiary bg-dark smaller"
         data-bs-theme="dark"
+        style={{position:"fixed",top:"0",height:"80px",width:"100%",backgroundColor:"#333",color:"white",zIndex:"1000"}}
       >
         <div className="container-fluid">
           <Link className="navbar-brand abc task_1" to="/">
