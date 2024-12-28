@@ -1,202 +1,256 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { userContext } from "../context/userContext";
+import Skeleton from "react-loading-skeleton";
+import { UserCircleIcon } from "lucide-react";
 
 const Navbar = () => {
-    return (
-        // <header className="p-3 text-bg-dark">
-        //     <div className="container">
-        //         <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        //             <a
-        //                 href="/"
-        //                 className="title"
-        //             >
-        //                 Title
-        //             </a>
-        //             <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        //                 <li>
-        //                     <Link
-        //                         to="/"
-        //                         className="nav-link px-2 text-secondary"
-        //                     >
-        //                         Home
-        //                     </Link>
-        //                 </li>
-        //                 <li>
-        //                     <a href="#" className="nav-link px-2 text-white">
-        //                         Features
-        //                     </a>
-        //                 </li>
-        //                 <li>
-        //                     <a href="#" className="nav-link px-2 text-white">
-        //                         Pricing
-        //                     </a>
-        //                 </li>
-        //                 <li>
-        //                     <Link to="/contactus" className="nav-link px-2 text-white">
-        //                         Contact Us
-        //                     </Link>
-        //                 </li>
-        //                 <li>
-        //                     <Link to="/aboutus" className="nav-link px-2 text-white">
-        //                         About Us
-        //                     </Link>
-        //                 </li>
-        //             </ul>
-        //             <form
-        //                 className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3"
-        //                 role="search"
-        //             >
-        //                 <input
-        //                     type="search"
-        //                     className="form-control form-control-dark text-bg-dark"
-        //                     placeholder="Search..."
-        //                     aria-label="Search"
-        //                 />
-        //             </form>
-        //             <div className="text-end">
-        //                 <button
-        //                     type="button"
-        //                     className="btn btn-outline-light me-2"
-        //                 >
-        //                     Login
-        //                 </button>
-        //                 <button type="button" className="btn btn-warning">
-        //                     Sign-up
-        //                 </button>
-        //             </div>
-        //         </div>
-        //     </div>
-        // </header>
-        <nav
-            className="navbar navbar-expand-lg bg-body-tertiary bg-dark smaller"
-            data-bs-theme="dark"
-        >
-            <div className="container-fluid">
-                <a className="navbar-brand abc" href="index.html">
-                    <img
-                        src="logo.png"
-                        alt="Logo"
-                        width={82}
-                        height={50}
-                        className="d-inline-block align-text-center"
-                    />
-                    Milk on the Way
+  const { LoginUser } = useContext(userContext);
+  const [ready, setready] = useState(false);
+  const handleClick = () => {
+    fetch("http://localhost:3000/logout", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    window.location.reload();
+  };
+  useEffect(() => {
+    setTimeout(() => {
+      setready(true);
+    }, 200);
+  }, []);
+
+  return (
+    <>
+      <nav
+        className="navbar navbar-expand-lg bg-body-tertiary bg-dark smaller"
+        data-bs-theme="dark"
+      >
+        <div className="container-fluid">
+          <Link className="navbar-brand abc task_1" to="/">
+            <img
+              src="logo.png"
+              alt="Logo"
+              width={82}
+              height={50}
+              className="d-inline-block align-text-center"
+            />
+            <div>Milk on the Way</div>
+          </Link>
+          <button
+            id="nav-ref"
+            className="navbar-toggler"
+            type="button"
+            // onclick=""
+            onClick={""}
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon" />
+          </button>
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className="nav-item">
+                <Link className="nav-link active" aria-current="page" to="/">
+                  Home
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/about">
+                  About
+                </Link>
+              </li>
+              <li className="nav-item dropdown">
+                <Link
+                  id="wnat"
+                  className="nav-link dropdown-toggle"
+                  to="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Products
+                </Link>
+                <ul id="why" className="dropdown-menu">
+                  <li>
+                    <Link className="dropdown-item" to="/milk">
+                      Milk
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" to="/ghee">
+                      Ghee
+                    </Link>
+                  </li>
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" to="/curd">
+                      Curd
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/contact">
+                  Contact Us
+                </Link>
+              </li>
+            </ul>
+
+            <ul class="dropdown-menu">
+              <li>
+                <a class="dropdown-item" href="#">
+                  Action
                 </a>
-                <button
-                    id="nav-ref"
-                    className="navbar-toggler"
-                    type="button"
-                    onclick=""
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span className="navbar-toggler-icon" />
-                </button>
-                <div
-                    className="collapse navbar-collapse"
-                    id="navbarSupportedContent"
-                >
-                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li className="nav-item">
-                            <a
-                                className="nav-link active"
-                                aria-current="page"
-                                href="index.html"
-                            >
-                                Home
-                            </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  Another action
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  Something else here
+                </a>
+              </li>
+            </ul>
+
+            {ready ? (
+              <>
+                {!!LoginUser ? (
+                  <>
+                    <div class="dropdown justify-content-center">
+                      <button
+                        className="btn btn-secondary dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        style={{
+                          border: "1px solid white",
+                          padding: "5px",
+                          borderRadius: "5px",
+                          boxShadow: "2px 2px 5px black",
+                          display: "flex",
+                          gap: "10px",
+                          color: "white",
+                          fontWeight: "bold",
+                          alignItems: "center",
+                        }}
+                      >
+                        <UserCircleIcon />
+                        {LoginUser.username}
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a class="dropdown-item" href="#">
+                            Action
+                          </a>
                         </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="about.html">
-                                About
-                            </a>
+                        <li>
+                          <a class="dropdown-item" href="#">
+                            Another action
+                          </a>
                         </li>
-                        <li className="nav-item dropdown">
-                            <a
-                                id="wnat"
-                                className="nav-link dropdown-toggle"
-                                href="#"
-                                role="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                Products
-                            </a>
-                            <ul id="why" className="dropdown-menu">
-                                <li>
-                                    <a
-                                        className="dropdown-item"
-                                        href="Milk.html"
-                                    >
-                                        Milk
-                                    </a>
-                                </li>
-                                <li>
-                                    <a className="dropdown-item" href="#">
-                                        Ghee
-                                    </a>
-                                </li>
-                                <li>
-                                    <hr className="dropdown-divider" />
-                                </li>
-                                <li>
-                                    <a className="dropdown-item" href="#">
-                                        Curd
-                                    </a>
-                                </li>
-                                <li>
-                                    <a className="dropdown-item" href="#">
-                                        Milk related sweets
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="contactus.html">
-                                Contact Us
-                            </a>
-                        </li>
-                    </ul>
-                    <form className="d-flex" role="search">
-                        <input
-                            className="form-control me-2"
-                            type="search"
-                            placeholder="Search"
-                            aria-label="Search"
-                        />
-                        <button
-                            className="btn btn-outline-primary"
-                            type="submit"
+
+                        <li
+                          onClick={handleClick}
+                          style={{
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "flex-start",
+                            marginLeft: "18px",
+                          }}
                         >
-                            Search
-                        </button>
-                        {/* <button type="button" class="btn btn-danger">Login </button>
-      <button type="button" class="btn btn-danger">SignUp </button> */}
-                    </form>
-                    <div className="mx-2 nav-extra">
-                        <div
-                            className="btn btn-danger"
-                            data-bs-toggle="modal"
-                            data-bs-target="#loginModal"
-                        >
-                            Login
-                        </div>
-                        <div
-                            id="signup123"
-                            className="btn btn-danger"
-                            data-bs-toggle="modal"
-                            data-bs-target="#signupModal"
-                        >
-                            Sign Up
-                        </div>
+                          <div>Logout</div>
+                        </li>
+                      </ul>
                     </div>
-                </div>
+                  </>
+                ) : (
+                  <div className="mx-2 nav-extra task_2">
+                    <div
+                      className="btn btn-danger"
+                      data-bs-toggle="modal"
+                      data-bs-target="#loginModal"
+                    >
+                      Login
+                    </div>
+
+                    <div
+                      class="btn btn-danger"
+                      data-bs-toggle="modal"
+                      data-bs-target="#signupModal"
+                    >
+                      <Link
+                        to={"/register"}
+                        style={{
+                          textDecoration: "none",
+                          color: "white",
+                        }}
+                      >
+                        SignUp
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <Skeleton />
+            )}
+          </div>
+        </div>
+      </nav>
+      <div id="loginModal" className="modal fade" tabIndex={-1}>
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Login</h5>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              />
             </div>
-        </nav>
-    );
+            <div className="modal-body">
+              <div className="box d-flex flex-direction-column justify-content-center gap-4">
+                <button
+                  type="button"
+                  id="fn"
+                  className="btn btn-success"
+                  onClick={() => {
+                    window.location.href = "/login-customer";
+                  }}
+                >
+                 
+                  Login for Customer
+                </button>
+                <button
+                  type="button"
+                  id="sd"
+                  className="btn btn-success"
+                  onClick={() => {
+                    window.location.href = "/login-vendor";
+                  }}
+                >
+                  Login for Vendor
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default Navbar;

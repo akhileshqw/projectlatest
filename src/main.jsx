@@ -16,11 +16,13 @@ import Vendor from "./components/Vendor.jsx";
 import Ghee from "./pages/Ghee.jsx";
 import Curd from "./pages/Curd.jsx";
 import Skeleton from "react-loading-skeleton";
+import Navbar from "./components/Navbar.jsx";
 
 
 const router = createBrowserRouter([
     { path: "/", element: <App /> },
     { path: "/about", element: <AboutUs /> },
+    {path:"/navbar",element:<Navbar />},
     { path: "/contact", element: <Contact /> },
     { path: "/milk", element: <Milk /> },
     { path: "/register", element: <Register /> },
