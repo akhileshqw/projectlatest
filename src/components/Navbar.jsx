@@ -28,9 +28,20 @@ const Navbar = () => {
       <nav
         className="navbar navbar-expand-lg bg-body-tertiary bg-dark smaller"
         data-bs-theme="dark"
-        style={{position:"fixed",top:"0",height:"80px",width:"100%",backgroundColor:"#333",color:"white",zIndex:"1000"}}
+        style={{
+          position: "fixed",
+          top: "0",
+          height: "80px",
+          width: "100%",
+          backgroundColor: "#333",
+          color: "white",
+          zIndex: "1000",
+        }}
       >
-        <div className="container-fluid">
+        <div
+          className="container-fluid"
+          style={{ zIndex: "100", backgroundColor: "#333" }}
+        >
           <Link className="navbar-brand abc task_1" to="/">
             <img
               src="logo.png"
@@ -232,7 +243,6 @@ const Navbar = () => {
                     window.location.href = "/login-customer";
                   }}
                 >
-                 
                   Login for Customer
                 </button>
                 <button

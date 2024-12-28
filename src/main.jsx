@@ -18,31 +18,30 @@ import Curd from "./pages/Curd.jsx";
 import Skeleton from "react-loading-skeleton";
 import Navbar from "./components/Navbar.jsx";
 import Layout from "./components/Layout.jsx";
-import { LucideLogIn } from "lucide-react";
-
- 
-
 
 const router = createBrowserRouter([
-    { path: "/", element: <Layout />,
-        children:[
-        {path:"/",element:<App />},
-        { path: "/about", element: <AboutUs /> },
-        {path:"/navbar",element:<Navbar />},
-        { path: "/contact", element: <Contact /> },
-        { path: "/milk", element: <Milk /> },
-        { path: "/register", element: <Register /> },
-        { path: "/login-customer", element: <LoginForCustomer /> },
-        { path: "/login-vendor", element: <LoginForVendor /> },
-        { path: "/vendor", element: <Vendor /> },
-        { path: "/ghee", element: <Ghee/> },
-        { path: "/curd", element: <Curd/> },
-        { path: "/test", element: <Skeleton/> },
-        // {path:"/blogin",element:<Llogin />}
-    ] },
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      { path: "/", element: <App /> },
+      { path: "/about", element: <AboutUs /> },
+      { path: "/navbar", element: <Navbar /> },
+      { path: "/contact", element: <Contact /> },
+      { path: "/milk", element: <Milk /> },
+      { path: "/register", element: <Register /> },
+      { path: "/login-customer", element: <LoginForCustomer /> },
+      { path: "/login-vendor", element: <LoginForVendor /> },
+      { path: "/vendor", element: <Vendor /> },
+      { path: "/ghee", element: <Ghee /> },
+      { path: "/curd", element: <Curd /> },
+      { path: "/test", element: <Skeleton /> },
+      // {path:"/blogin",element:<Llogin />}
+    ],
+  },
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <UserContextProvider>
-        <RouterProvider router={router} />
-    </UserContextProvider>
+  <UserContextProvider>
+    <RouterProvider router={router} />
+  </UserContextProvider>
 );
