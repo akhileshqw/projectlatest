@@ -59,7 +59,7 @@ const Register = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div>
                         <div className="container">
-                            <h3>Register on Milk on the way</h3>
+                            <h3 style={{textAlign:"center",fontSize:"35px"}}>Register on Milk on the way</h3>
                             <div className="container my-4">
                                 <div className="mb-3 qaz">
                                     <div className="ver">

@@ -18,6 +18,8 @@ import Curd from "./pages/Curd.jsx";
 import Skeleton from "react-loading-skeleton";
 import Navbar from "./components/Navbar.jsx";
 import Layout from "./components/Layout.jsx";
+import { LucideLogIn } from "lucide-react";
+
  
 
 
@@ -36,6 +38,7 @@ const router = createBrowserRouter([
         { path: "/ghee", element: <Ghee/> },
         { path: "/curd", element: <Curd/> },
         { path: "/test", element: <Skeleton/> },
+        // {path:"/blogin",element:<Llogin />}
     ] },
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
