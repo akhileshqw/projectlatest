@@ -6,17 +6,89 @@ import { userContext } from "../context/userContext";
 
 const Vendor = () => {
   const [vendorsList, setVendorsList] = useState([]);
-  const [finvendor,setfinvendor]=useState([]);
+  const [finvendor, setfinvendor] = useState([]);
   const navigate = useNavigate();
+  const [strparameter, setparameters] = useState([]);
+  const [numparameter, setnumparameter] = useState([]);
 
   const { LoginUser } = useContext(userContext);
 
-  const filterbystar=(v)=>{
-      if(vendorsList.length!==0){
-       const  sp=vendorsList.filter((vendor) => vendor.rating >= v)
-        setfinvendor(sp)
-  }
-}
+  const filtermain = (v) => {
+    //     if(finvendor.length!==0){
+    //      const  sp=finvendor.filter((vendor) => vendor.rating >= v)
+    //      console.log(sp.length)
+    //      sp.sort((v1,v2)=>v2.rating-v1.rating)
+    //      setVendorsList(sp)
+    // }
+    if (typeof v == "number") {
+      // setnumparameter([]);
+      let tz = [];
+      tz.push(v);
+      // numparameter.push(v);
+      setnumparameter(tz);
+    } else {
+      console.log("in str para");
+      if (strparameter.indexOf(v) == -1) {
+        // strparameter.push(v);
+        let tz = [];
+        for (let index = 0; index < strparameter.length; index++) {
+          const element = strparameter[index];
+          tz.push(element);
+        }
+        tz.push(v);
+        setparameters(tz);
+      } else {
+        let tz = [];
+        strparameter.splice(strparameter.indexOf(v), 1);
+        for (let index = 0; index < strparameter.length; index++) {
+          const element = strparameter[index];
+          tz.push(element);
+        }
+        setparameters(tz);
+      }
+      // let tz=strparameter.filter(a=>a!=v)
+    }
+    console.log(numparameter);
+    console.log(strparameter);
+
+    let np = [];
+    let strp = [];
+
+    if (numparameter.length != 0) {
+      np = finvendor.filter((vendor) => vendor.rating >= numparameter[0]);
+      np.sort((a, b) => b.rating - a.rating);
+    }
+
+    if (strparameter.length != 0 && numparameter.length != 0) {
+      for (let index = 0; index < np.length; index++) {
+        const element =np[index];
+        if (strparameter.includes(element.work)) {
+          strp.push(element);
+        }
+      }
+      setVendorsList(strp);
+      console.log("both ");
+    } else if (strparameter.length == 0 && numparameter.length > 0) {
+      setVendorsList(np);
+      console.log("only num");
+    } else if (strparameter.length > 0 && numparameter.length == 0) {
+      let tt = [];
+      for (let index = 0; index < finvendor.length; index++) {
+        const element = finvendor[index];
+        if (strparameter.includes(element.work)) {
+          tt.push(element);
+        }
+      }
+      console.log("only str");
+      console.log(tt);
+      setVendorsList(tt);
+    } else {
+      setVendorsList(finvendor);
+      console.log("none");
+    }
+    console.log("len:", vendorsList.length);
+  };
+
   const getVendors = async () => {
     const data = await fetch("http://localhost:3000/vendors");
     const vendorsData = await data.json();
@@ -77,7 +149,7 @@ const Vendor = () => {
                   type="radio"
                   name="rating"
                   defaultValue={5}
-                  onChange={()=>filterbystar(5)}
+                  onChange={() => filtermain(5)}
                 />{" "}
                 5 Stars
               </label>
@@ -86,7 +158,7 @@ const Vendor = () => {
                   type="radio"
                   name="rating"
                   defaultValue={4}
-                  onChange={()=>filterbystar(4)}
+                  onChange={() => filtermain(4)}
                 />{" "}
                 4 Stars &amp; Up
               </label>
@@ -95,7 +167,7 @@ const Vendor = () => {
                   type="radio"
                   name="rating"
                   defaultValue={3}
-                  onChange={()=>filterbystar(3)}
+                  onChange={() => filtermain(3)}
                 />{" "}
                 3 Stars &amp; Up
               </label>
@@ -104,7 +176,7 @@ const Vendor = () => {
                   type="radio"
                   name="rating"
                   defaultValue={2}
-                  onChange={()=>filterbystar(2)}
+                  onChange={() => filtermain(2)}
                 />{" "}
                 2 Stars &amp; Up
               </label>
@@ -113,7 +185,7 @@ const Vendor = () => {
                   type="radio"
                   name="rating"
                   defaultValue={1}
-                  onChange={()=>filterbystar(1)}
+                  onChange={() => filtermain(1)}
                 />{" "}
                 1 Star &amp; Up
               </label>
@@ -190,8 +262,10 @@ const Vendor = () => {
                 <input
                   type="checkbox"
                   name="products"
-                  defaultValue="fruits"
-                  onclick="filterVendors()"
+                  defaultValue="milk wholesale"
+                  onChange={(e) => {
+                    filtermain(e.target.value);
+                  }}
                 />{" "}
                 milk wholesale{" "}
               </label>
@@ -199,8 +273,10 @@ const Vendor = () => {
                 <input
                   type="checkbox"
                   name="products"
-                  defaultValue="vegetables"
-                  onclick="filterVendors()"
+                  defaultValue="Organic Milk"
+                  onChange={(e) => {
+                    filtermain(e.target.value);
+                  }}
                 />{" "}
                 Organic Milk{" "}
               </label>
@@ -208,8 +284,10 @@ const Vendor = () => {
                 <input
                   type="checkbox"
                   name="products"
-                  defaultValue="dairy"
-                  onclick="filterVendors()"
+                  defaultValue="Fresh Cow Milk and Curd"
+                  onChange={(e) => {
+                    filtermain(e.target.value);
+                  }}
                 />{" "}
                 Fresh Cow Milk and Curd
               </label>
@@ -217,8 +295,10 @@ const Vendor = () => {
                 <input
                   type="checkbox"
                   name="products"
-                  defaultValue="dairy"
-                  onclick="filterVendors()"
+                  defaultValue="Butter and Cream"
+                  onChange={(e) => {
+                    filtermain(e.target.value);
+                  }}
                 />{" "}
                 Butter and Cream
               </label>
@@ -226,8 +306,10 @@ const Vendor = () => {
                 <input
                   type="checkbox"
                   name="products"
-                  defaultValue="dairy"
-                  onclick="filterVendors()"
+                  defaultValue="any type of animal milk"
+                  onChange={(e) => {
+                    filtermain(e.target.value);
+                  }}
                 />{" "}
                 any type of animal milk
               </label>
@@ -260,9 +342,7 @@ const Vendor = () => {
 
                       {/* generate a random no between in the range 1-5 */}
 
-                      <div className="rating">
-                        {renderStars(vendor.rating + 1)}
-                      </div>
+                      <div className="rating">{renderStars(vendor.rating)}</div>
                       <div className="vendor-info">
                         <strong>Products Sold:</strong> {vendor.work}
                       </div>
@@ -280,7 +360,7 @@ const Vendor = () => {
                   </div>
                 );
               })}
-              <div
+              {/* <div
                 className="vendor-card"
                 data-rating={5}
                 data-cost="low"
@@ -306,7 +386,7 @@ const Vendor = () => {
                     <a href="tel:+911234567890">+91 12345 67890</a>
                   </div>
                 </div>
-              </div>
+              </div> */}
               {/* Vendor Card 2 */}
               {/* <div
                             className="vendor-card"

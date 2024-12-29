@@ -7,9 +7,17 @@ import cookieParser from "cookie-parser";
 const app = express();
 const port = 3000;
 import nodemailer from "nodemailer";
-import "dotenv/config";
+// import "dotenv/config";
 
 
+import dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config({
+  path: "../.env" // Adjust the path to your .env file location
+});
+
+console.log(process.env.EMAIL_PASS)
 const jwtSecret = "lasd4831231#^";
 
 // db connection
@@ -198,13 +206,13 @@ app.get("/vendors", async (req, res) => {
 
 app.post("/contact", async (req, res) => {
     const { email, query, concern } = req.body;
-
+        console.log(process.env.EMAIL_PASS)
     // Create a transporter object using SMTP with your email host details
     let transporter = nodemailer.createTransport({
         service: "gmail", // You can also use other email services like Outlook, Yahoo, etc.
         auth: {
             user: "milkontheway01@gmail.com", // Your host email
-            pass: process.env.SMTP_PASS, // Host email password (consider using environment variables for security)
+            pass: process.env.EMAIL_PASS, // Host email password (consider using environment variables for security)
         },
     });
 

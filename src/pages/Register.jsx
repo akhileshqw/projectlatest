@@ -325,21 +325,17 @@ const Register = () => {
                       className="form-select"
                       aria-label="Default select example"
                     >
-                      <option selected="" value={"sells milk"}>
-                        sells milk wholesale
+                      <option selected="" value={"cow and buffalo milk"}>
+                      sells cow and buffalo milk
                       </option>
-                      <option value={"sells Organic Milk"}>
-                        sells Organic Milk
+                      <option value={"all types of animal milk"}>
+                        sells any type of animal milk
                       </option>
-                      <option value={"sells Fresh Cow Milk and Curd"}>
+                      <option value={"milk and curd"}>
                         sells Fresh Cow Milk and Curd
                       </option>
-                      <option value={"Butter and Cream"}>
-                        sells Butter and Cream
-                      </option>
-
-                      <option value={"Butter and Cream"}>
-                        sells any type of animal milk
+                      <option value={"butter and curd"}>
+                        sells butter and cream
                       </option>
                     </select>
                   </div>
