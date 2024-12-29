@@ -18,6 +18,7 @@ import Curd from "./pages/Curd.jsx";
 import Skeleton from "react-loading-skeleton";
 import Navbar from "./components/Navbar.jsx";
 import Layout from "./components/Layout.jsx";
+import Rating from "./components/Rating.jsx";
 
 const router = createBrowserRouter([
   {
@@ -36,7 +37,8 @@ const router = createBrowserRouter([
       { path: "/ghee", element: <Ghee /> },
       { path: "/curd", element: <Curd /> },
       { path: "/test", element: <Skeleton /> },
-      // {path:"/blogin",element:<Llogin />}
+      {path:"/rating",element:<Rating />},
+
     ],
   },
 ]);

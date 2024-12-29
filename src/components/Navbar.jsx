@@ -5,7 +5,7 @@ import Skeleton from "react-loading-skeleton";
 import { UserCircleIcon } from "lucide-react";
 
 const Navbar = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const { LoginUser } = useContext(userContext);
   const [ready, setready] = useState(false);
   const handleClick = () => {
@@ -24,6 +24,8 @@ const Navbar = () => {
       setready(true);
     }, 200);
   }, []);
+
+// console.log(LoginUser)
 
   return (
     <>
@@ -119,7 +121,7 @@ const Navbar = () => {
               </li>
             </ul>
 
-            <ul class="dropdown-menu">
+            {/* <ul class="dropdown-menu">
               <li>
                 <a class="dropdown-item" href="#">
                   Action
@@ -135,13 +137,13 @@ const Navbar = () => {
                   Something else here
                 </a>
               </li>
-            </ul>
+            </ul> */}
 
             {ready ? (
               <>
                 {!!LoginUser ? (
                   <>
-                    <div class="dropdown justify-content-center">
+                    <div className="dropdown justify-content-center">
                       <button
                         className="btn btn-secondary dropdown-toggle"
                         type="button"
@@ -162,16 +164,16 @@ const Navbar = () => {
                         <UserCircleIcon />
                         {LoginUser.username}
                       </button>
-                      <ul class="dropdown-menu">
+                   {LoginUser.isVendor && <ul className="dropdown-menu">
                         <li>
-                          <a class="dropdown-item" href="#">
-                            Action
-                          </a>
+                          <Link className="dropdown-item" to="/verify">
+                            Get Verified
+                          </Link>
                         </li>
                         <li>
-                          <a class="dropdown-item" href="#">
-                            Another action
-                          </a>
+                          <Link className="dropdown-item" to="/products" style={{textWrap:"wrap"}}>
+                            Manage Products and Cost
+                          </Link>
                         </li>
 
                         <li
@@ -186,7 +188,32 @@ const Navbar = () => {
                         >
                           <div>Logout</div>
                         </li>
-                      </ul>
+                      </ul>}   
+                      {!LoginUser.isVendor && <ul className="dropdown-menu">
+                        <li>
+                          <Link className="dropdown-item" to="/rating">
+                            Rate the Vendors
+                          </Link>
+                        </li>
+                        <li>
+                          <Link className="dropdown-item" to="/premium">
+                            Get Premium
+                          </Link>
+                        </li>
+
+                        <li
+                          onClick={handleClick}
+                          style={{
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "flex-start",
+                            marginLeft: "18px",
+                          }}
+                        >
+                          <div>Logout</div>
+                        </li>
+                      </ul>}  
                     </div>
                   </>
                 ) : (
@@ -200,7 +227,7 @@ const Navbar = () => {
                     </div>
 
                     <div
-                      class="btn btn-danger"
+                      className="btn btn-danger"
                       data-bs-toggle="modal"
                       data-bs-target="#signupModal"
                     >

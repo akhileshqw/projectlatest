@@ -15,8 +15,8 @@ export function UserContextProvider({ children }) {
       credentials: "include",
     });
     const user = await data.json();
-    console.log("hello");
-    console.log("the final user is", user);
+    // console.log("hello");
+    // console.log("the final user is", user);
     setLoginUser(user);
     setReady(true);
   };
