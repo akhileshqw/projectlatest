@@ -25,7 +25,8 @@ const Navbar = () => {
     }, 200);
   }, []);
 
-// console.log(LoginUser)
+console.log("navbar component",LoginUser)
+
 
   return (
     <>

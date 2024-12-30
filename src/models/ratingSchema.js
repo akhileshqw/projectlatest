@@ -12,7 +12,7 @@ const ratingSchema = new mongoose.Schema({
   comments: {
     type: String,
   },
-  paymentProof: {
+  imageUrl: {
     type: String,
   },
 });

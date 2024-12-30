@@ -4,6 +4,24 @@ import { useForm } from "react-hook-form";
 
 const RatingForm = () => {
   const [rating, setRating] = useState(0); // For storing the selected rating
+  const [imageUrl, setImageUrl] = useState("");
+  const handleImageUpload = (event) => {
+    console.log("in method want");
+
+    const file = event.target.files[0];
+    console.log("file", file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        console.log(base64String);
+        setImageUrl(base64String); // Store the Base64 string in state
+      };
+      reader.readAsDataURL(file); // Convert the file to Base64
+    }
+  };
+
   const {
     register,
     handleSubmit,
@@ -23,8 +41,9 @@ const RatingForm = () => {
 
   // Handle form submission
   const onSubmit = async (data) => {
-    console.log("Form Data:", { ...data, rating });
-    let findata = { ...data, rating };
+    // let url=imageUrl
+    // console.log("Form Data:", { ...data, rating, imageUrl});
+    let findata = { ...data, rating, imageUrl };
     //   const findUser = await RegisterModel.findOne({ email });
     //down here
     try {
@@ -38,21 +57,22 @@ const RatingForm = () => {
       let content = await response.json();
       console.log("Server response:", content);
 
-      // setresMessage(content);
-
+      //   setresMessage(content);
       if (content.success) {
         // accountCreated();
         // setLoginUser(content.user);
+        alert(content.msg);
       } else {
         // failed();
-        console.log("failed");
+        // console.log("failed");
+        alert(content.msg);
       }
     } catch (error) {
       console.error("Error during API request:", error);
       // failed();
     }
 
-    alert("Thank you for your feedback!");
+    // alert("Thank you for your feedback!");
   };
 
   // Function to set the rating when a star is clicked
@@ -196,25 +216,26 @@ const RatingForm = () => {
 
         {/* Payment Proof Field */}
         {/* remember me */}
-        {/* <div className="mb-3">
-                    <label htmlFor="paymentProof" className="form-label">
-                        <strong>Payment Proof</strong>
-                    </label>
-                    <input
-                        type="file"
-                        className="form-control"
-                        id="paymentProof"
-                        accept="image/*"
-                        {...register("paymentProof", {
-                            required: "Payment proof is required",
-                        })}
-                    />
-                    {errors.paymentProof && (
-                        <div className="text-danger mt-1">
-                            <small>{errors.paymentProof.message}</small>
-                        </div>
-                    )}
-                </div> */}
+        <div className="mb-3">
+          <label htmlFor="paymentProof" className="form-label">
+            <strong>Payment Proof</strong>
+          </label>
+          <input
+            type="file"
+            className="form-control"
+            id="paymentProof"
+            accept="image/*"
+            onChange={(e) => handleImageUpload(e)}
+            // {...register("paymentProof", {
+            //   required: "Payment proof is required",
+            // })}
+          />
+          {errors.paymentProof && (
+            <div className="text-danger mt-1">
+              <small>{errors.paymentProof.message}</small>
+            </div>
+          )}
+        </div>
 
         {/* Submit Button */}
         <button

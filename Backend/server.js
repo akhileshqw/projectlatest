@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import { RegisterModel } from "../src/models/registerSchema.js";
+import { RatingModal } from "../src/models/ratingSchema.js";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 const app = express();
@@ -20,7 +21,8 @@ const jwtSecret = "lasd4831231#^";
 
 // db connection
 mongoose.connect("mongodb://127.0.0.1:27017/milkontheway");
-
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -157,7 +159,7 @@ app.post("/login", async (req, res) => {
       userObj,
       jwtSecret,
       {
-        expiresIn: "1h",
+        expiresIn: "2 days",
       },
       (err, token) => {
         if (err) throw err;
@@ -248,27 +250,48 @@ app.get("/logout", (req, res) => {
 
 // modifying
 app.post("/ratings", async (req, res) => {
-  const { vendorEmail } = req.body;
-  console.log(vendorEmail);
+  const { vendorName, vendorEmail, comments, rating,imageUrl } = req.body;
+
+  // console.log(vendorEmail);
   // console.log(req.body)
 
   let email = vendorEmail;
   const findUser = await RegisterModel.findOne({ email });
   console.log("findUser", findUser);
+
   if (!findUser) {
     res.send({ success: false, msg: "Vendor not found" });
+    return ;
   }
-  if (findUser.isVendor) {
+  if (!findUser.isVendor) {
     res.send({
       success: false,
-      msg: "You are a vendor. You can't give rating ",
+      msg: "You can't give rating to a customer",
     });
+    return ;
   }
 
-  res.send({
-    success: true,
-    msg: "you can proceed  ahead",
-  });
+  // res.send({
+  //   success: true,
+  //   msg: "you can proceed  ahead",
+  // });
+  try {
+    const ratingform = await RatingModal.create({
+      vendorName,
+      vendorEmail,
+      rating,
+      comments,
+      imageUrl,
+    });
+    console.log("rating",ratingform);
+    res.send({
+      success: true,
+      msg: "form saved in database",
+    });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error });
+    console.log(error);
+  }
 });
 
 app.listen(port, () => {
