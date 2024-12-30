@@ -33,37 +33,31 @@ const Register = () => {
     console.log("Data to be sent:", data); // Debug log
 
     try {
-        let response = await fetch("http://localhost:3000/createaccount", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        });
-        let content = await response.json();
-        console.log("Server response:", content);
+      let response = await fetch("http://localhost:3000/createaccount", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      let content = await response.json();
+      console.log("Server response:", content);
 
-        setresMessage(content);
+      setresMessage(content);
 
-        if (content.success) {
-            accountCreated();
-            setLoginUser(content.user);
-        } else {
-            failed();
-        }
-    } catch (error) {
-        console.error("Error during API request:", error);
+      if (content.success) {
+        accountCreated();
+        setLoginUser(content.user);
+      } else {
         failed();
+      }
+    } catch (error) {
+      console.error("Error during API request:", error);
+      failed();
     }
 
-    // Reset state after request
     SetIsVendor(false);
-};
-
-
-
-
-
+  };
 
   return (
     <>
@@ -326,7 +320,7 @@ const Register = () => {
                       aria-label="Default select example"
                     >
                       <option selected="" value={"cow and buffalo milk"}>
-                      sells cow and buffalo milk
+                        sells cow and buffalo milk
                       </option>
                       <option value={"all types of animal milk"}>
                         sells any type of animal milk
