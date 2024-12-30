@@ -25,6 +25,7 @@ const RatingForm = () => {
   const {
     register,
     handleSubmit,
+    reset,
     setValue,
     formState: { errors },
   } = useForm();
@@ -61,7 +62,9 @@ const RatingForm = () => {
       if (content.success) {
         // accountCreated();
         // setLoginUser(content.user);
+        reset();
         alert(content.msg);
+
       } else {
         // failed();
         // console.log("failed");
@@ -225,6 +228,7 @@ const RatingForm = () => {
             className="form-control"
             id="paymentProof"
             accept="image/*"
+            required="true"
             onChange={(e) => handleImageUpload(e)}
             // {...register("paymentProof", {
             //   required: "Payment proof is required",

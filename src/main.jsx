@@ -19,6 +19,8 @@ import Skeleton from "react-loading-skeleton";
 import Navbar from "./components/Navbar.jsx";
 import Layout from "./components/Layout.jsx";
 import Rating from "./components/Rating.jsx";
+import ViewRating from "./components/ViewRating.jsx";
+import RatingList from "./components/RatingList.jsx";
 
 const router = createBrowserRouter([
   {
@@ -38,7 +40,7 @@ const router = createBrowserRouter([
       { path: "/curd", element: <Curd /> },
       { path: "/test", element: <Skeleton /> },
       {path:"/rating",element:<Rating />},
-
+      {path:"/view-rating",element:<RatingList />},
     ],
   },
 ]);

@@ -197,6 +197,11 @@ console.log("navbar component",LoginUser)
                           </Link>
                         </li>
                         <li>
+                          <Link className="dropdown-item" to="/view-rating">
+                            View Ratings
+                          </Link>
+                        </li>
+                        <li>
                           <Link className="dropdown-item" to="/premium">
                             Get Premium
                           </Link>

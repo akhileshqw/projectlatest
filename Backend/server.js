@@ -294,6 +294,11 @@ app.post("/ratings", async (req, res) => {
   }
 });
 
+app.get("/ratingsdata", async (req, res) => {
+  const vendorsData = await RatingModal.find();
+  res.send(vendorsData);
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
