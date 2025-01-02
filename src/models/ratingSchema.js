@@ -15,6 +15,9 @@ const ratingSchema = new mongoose.Schema({
   imageUrl: {
     type: String,
   },
+  givenby: {
+    type: String,
+  },
 });
 
 export const RatingModal = mongoose.model("rating", ratingSchema);

@@ -1,29 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { userContext } from "../context/userContext";
 
 const RatingList = () => {
   const [ratings, setRatings] = useState([]);
   const [error, setError] = useState("");
+  const { LoginUser } = useContext(userContext);
 
   useEffect(() => {
     // Fetch data from the backend
+
     const fetchRatings = async () => {
+
+      if (!LoginUser || !LoginUser.email) {
+        return;
+      }
+
+
+      console.log("before above");
+      console.log(LoginUser);
+      // console.log("in abovee ", LoginUser, LoginUser.email);
+      const give = {
+        givenby: LoginUser.email,
+      };
       try {
-        const response = await fetch("http://localhost:3000/ratingsdata"); // Replace with your backend URL
+        const response = await fetch("http://localhost:3000/ratingsdata", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(give),
+        });  
         if (!response.ok) {
           throw new Error("Failed to fetch ratings");
         }
         const data = await response.json();
+        console.log(data);
         setRatings(data);
       } catch (err) {
         setError(err.message);
       }
     };
-
     fetchRatings();
-  }, []);
-
-  if (error) {
-    return <div className="alert alert-danger">{error}</div>;
+  }, [LoginUser]);
+  // console.log("in rl:",LoginUser)
+  if (!LoginUser) {
+    return <div className="text-center mt-4">Loading user data...</div>;
   }
 
   return (

@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import { userContext } from "../context/userContext";
 // import { RegisterModel } from "../models/registerSchema";
 
 const RatingForm = () => {
   const [rating, setRating] = useState(0); // For storing the selected rating
+  const { LoginUser } = useContext(userContext);
+
   const [imageUrl, setImageUrl] = useState("");
   const handleImageUpload = (event) => {
     console.log("in method want");
@@ -43,8 +46,11 @@ const RatingForm = () => {
   // Handle form submission
   const onSubmit = async (data) => {
     // let url=imageUrl
+    // console.log()
     // console.log("Form Data:", { ...data, rating, imageUrl});
-    let findata = { ...data, rating, imageUrl };
+    let givenby=LoginUser.email
+    console.log(givenby)
+    let findata = { ...data, rating, imageUrl,givenby };
     //   const findUser = await RegisterModel.findOne({ email });
     //down here
     try {
