@@ -21,8 +21,8 @@ const jwtSecret = "lasd4831231#^";
 
 // db connection
 mongoose.connect("mongodb://127.0.0.1:27017/milkontheway");
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -74,16 +74,30 @@ app.post("/createaccount", async (req, res) => {
       email: email,
       isVendor: isVendor,
     };
-    const token = jwt.sign(userObj, jwtSecret, {
-      expiresIn: "2 days",
-    });
-
-    console.log(createUser);
-    res.cookie("token", token).send({
-      success: true,
-      msg: "Account Created Successfully",
-      user: userObj,
-    });
+    // console.log("before jwt");
+    jwt.sign(
+      userObj,
+      jwtSecret,
+      {
+        expiresIn: "2 days",
+      },
+      (err, token) => {
+        if (err) throw err;
+        res
+          .cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "strict",
+          })
+          .send({
+            success: true,
+            msg: "Account created Successfully",
+            user: userObj,
+          });
+      }
+    );
+    // console.log("after jwt");
+    // console.log(res.getHeader())
   } catch (error) {
     res.status(400).json({ success: false, error: error });
     console.log(error);
@@ -182,7 +196,9 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
+  console.log("-------");
   console.log("the cookie is ");
+  // console.log(req);
   console.log(req.cookies);
 
   const { token } = req.cookies;
@@ -250,7 +266,7 @@ app.get("/logout", (req, res) => {
 
 // modifying
 app.post("/ratings", async (req, res) => {
-  const { vendorName, vendorEmail, comments, rating,imageUrl } = req.body;
+  const { vendorName, vendorEmail, comments, rating, imageUrl } = req.body;
 
   // console.log(vendorEmail);
   // console.log(req.body)
@@ -261,14 +277,14 @@ app.post("/ratings", async (req, res) => {
 
   if (!findUser) {
     res.send({ success: false, msg: "Vendor not found" });
-    return ;
+    return;
   }
   if (!findUser.isVendor) {
     res.send({
       success: false,
       msg: "You can't give rating to a customer",
     });
-    return ;
+    return;
   }
 
   // res.send({
@@ -283,7 +299,7 @@ app.post("/ratings", async (req, res) => {
       comments,
       imageUrl,
     });
-    console.log("rating",ratingform);
+    console.log("rating", ratingform);
     res.send({
       success: true,
       msg: "form saved in database",

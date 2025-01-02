@@ -15,7 +15,7 @@ const RatingForm = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result;
-        console.log(base64String);
+        // console.log(base64String);
         setImageUrl(base64String); // Store the Base64 string in state
       };
       reader.readAsDataURL(file); // Convert the file to Base64
