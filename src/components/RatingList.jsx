@@ -10,11 +10,9 @@ const RatingList = () => {
     // Fetch data from the backend
 
     const fetchRatings = async () => {
-
       if (!LoginUser || !LoginUser.email) {
         return;
       }
-
 
       console.log("before above");
       console.log(LoginUser);
@@ -30,7 +28,7 @@ const RatingList = () => {
           },
           credentials: "include",
           body: JSON.stringify(give),
-        });  
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch ratings");
         }
@@ -55,41 +53,102 @@ const RatingList = () => {
         <div className="text-center">No ratings available</div>
       ) : (
         <div className="row">
-          {ratings.map((rating) => (
-            <div key={rating._id} className="col-md-4 mb-3">
-              <div className="card shadow-sm">
-                {/* Image */}
-                {rating.imageUrl && (
-                  <img
-                    src={rating.imageUrl} // Adjust based on your backend's file serving logic
-                    alt="Vendor"
-                    className="card-img-top"
-                    style={{ height: "200px", objectFit: "cover" }}
-                  />
-                )}
+          <div className="row">
+            <div className="row">
+              <div className="row">
+                <div className="row">
+                  <div className="row">
+                    {ratings.map((rating) => (
+                      <div
+                        key={rating._id}
+                        className="col-12 col-sm-6 col-md-6 col-lg-6 mb-4"
+                        style={{ display: "flex", justifyContent: "center" }} // Center the cards in their column
+                      >
+                        <div
+                          className="card shadow-lg"
+                          style={{
+                            width: "100%",
+                            maxWidth: "500px",
+                            borderRadius: "12px",
+                            overflow: "hidden",
+                          }}
+                        >
+                          {/* Image Section */}
+                          {rating.imageUrl && (
+                            <img
+                              src={rating.imageUrl}
+                              alt="Vendor"
+                              className="card-img-top"
+                              style={{
+                                height: "250px",
+                                objectFit: "cover",
+                                borderBottom: "2px solid #f1f1f1",
+                              }}
+                            />
+                          )}
 
-                <div className="card-body">
-                  {/* Vendor Name */}
-                  <h5 className="card-title">{rating.vendorName}</h5>
+                          {/* Details Section */}
+                          <div
+                            className="card-body"
+                            style={{ padding: "20px" }}
+                          >
+                            <h4
+                              className="card-title text-center mb-3"
+                              style={{ fontWeight: "bold", color: "#333" }}
+                            >
+                              {rating.vendorName}
+                            </h4>
 
-                  {/* Vendor Email */}
-                  <p className="card-text">
-                    <strong>Email:</strong> {rating.vendorEmail}
-                  </p>
+                            {/* Vendor Details */}
+                            <p
+                              className="card-text text-center mb-3"
+                              style={{ fontSize: "15px", color: "#555" }}
+                            >
+                              <strong>Email:</strong> {rating.vendorEmail}
+                            </p>
 
-                  {/* Rating */}
-                  <p className="card-text">
-                    <strong>Rating:</strong> {rating.rating} / 5
-                  </p>
+                            <hr style={{ borderColor: "#ddd" }} />
 
-                  {/* Comments */}
-                  <p className="card-text">
-                    <strong>Comments:</strong> {rating.comments}
-                  </p>
+                            <div className="d-flex justify-content-between align-items-center mb-3">
+                              <p
+                                className="card-text"
+                                style={{ marginBottom: "0", color: "#444" }}
+                              >
+                                <strong>Rating:</strong> {rating.rating} / 5
+                              </p>
+                              <p
+                                className="card-text"
+                                style={{ marginBottom: "0", color: "#888" }}
+                              >
+                                <small>
+                                  {rating.createdAt &&
+                                    `Reviewed on ${new Date(
+                                      rating.createdAt
+                                    ).toLocaleDateString()}`}
+                                </small>
+                              </p>
+                            </div>
+
+                            <div style={{ marginTop: "10px", color: "#555" }}>
+                              <p className="card-text">
+                                <strong>Comments:</strong>
+                              </p>
+                              <p
+                                className="card-text"
+                                style={{ fontStyle: "italic" }}
+                              >
+                                {rating.comments}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          ))}
+          </div>
         </div>
       )}
     </div>

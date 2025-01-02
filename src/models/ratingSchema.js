@@ -18,6 +18,10 @@ const ratingSchema = new mongoose.Schema({
   givenby: {
     type: String,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 export const RatingModal = mongoose.model("rating", ratingSchema);

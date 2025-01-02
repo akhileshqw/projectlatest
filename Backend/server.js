@@ -266,7 +266,8 @@ app.get("/logout", (req, res) => {
 
 // modifying
 app.post("/ratings", async (req, res) => {
-  const { vendorName, vendorEmail, comments, rating, imageUrl,givenby } = req.body;
+  const { vendorName, vendorEmail, comments, rating, imageUrl, givenby } =
+    req.body;
 
   // console.log(vendorEmail);
   // console.log(req.body)
@@ -299,6 +300,7 @@ app.post("/ratings", async (req, res) => {
       comments,
       imageUrl,
       givenby,
+      createdAt: new Date(),
     });
     console.log("rating", ratingform);
     res.send({
@@ -312,9 +314,9 @@ app.post("/ratings", async (req, res) => {
 });
 
 app.post("/ratingsdata", async (req, res) => {
-  const {givenby}=req.body;
+  const { givenby } = req.body;
   // console.log(givenby)
-  const vendorsData = await RatingModal.find({givenby:givenby});
+  const vendorsData = await RatingModal.find({ givenby: givenby });
   // console.log("vd",vendorsData)
   res.send(vendorsData);
 });
