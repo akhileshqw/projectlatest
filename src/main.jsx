@@ -21,6 +21,7 @@ import Layout from "./components/Layout.jsx";
 import Rating from "./components/Rating.jsx";
 import ViewRating from "./components/ViewRating.jsx";
 import RatingList from "./components/RatingList.jsx";
+import Verify from "./components/BecomeCertifiedVendor.jsx";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
       { path: "/test", element: <Skeleton /> },
       {path:"/rating",element:<Rating />},
       {path:"/view-rating",element:<RatingList />},
+      {path:"/verify",element:<Verify/>},
     ],
   },
 ]);
