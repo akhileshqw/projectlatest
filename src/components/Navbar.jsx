@@ -25,8 +25,7 @@ const Navbar = () => {
     }, 200);
   }, []);
 
-console.log("navbar component",LoginUser)
-
+  console.log("navbar component", LoginUser);
 
   return (
     <>
@@ -61,7 +60,6 @@ console.log("navbar component",LoginUser)
             id="nav-ref"
             className="navbar-toggler"
             type="button"
-            // onclick=""
             onClick={""}
             data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent"
@@ -122,29 +120,16 @@ console.log("navbar component",LoginUser)
               </li>
             </ul>
 
-            {/* <ul class="dropdown-menu">
-              <li>
-                <a class="dropdown-item" href="#">
-                  Action
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">
-                  Another action
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">
-                  Something else here
-                </a>
-              </li>
-            </ul> */}
-
             {ready ? (
               <>
                 {!!LoginUser ? (
                   <>
-                    <div className="dropdown justify-content-center">
+                    <div
+                      className="dropdown justify-content-center"
+                      style={{ position: "relative" }}
+                    >
+                      {/* Display Certified Icon if User is Certified */}
+
                       <button
                         className="btn btn-secondary dropdown-toggle"
                         type="button"
@@ -162,64 +147,108 @@ console.log("navbar component",LoginUser)
                           alignItems: "center",
                         }}
                       >
-                        <UserCircleIcon />
+                        <div style={{ display: "flex" }}>
+                          <div>
+                            <UserCircleIcon />
+                          </div>
+                          {LoginUser.isCertified && (
+                            <div
+                              style={{
+                                // position: "absolute",
+                                // top: "0px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                // right: "100px",
+                                zIndex: "10",
+                                height: "16px",
+                                width: "14px",
+                                backgroundColor: "gold",
+                                borderRadius: "50%",
+                                padding: "2px 2px",
+                                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
+                              }}
+                              title="Certified Vendor"
+                            >
+                              <i
+                                className="fas fa-check-circle"
+                                style={{ color: "black", fontSize: "large" }}
+                              >
+                                c
+                              </i>
+                            </div>
+                          )}
+                        </div>
+
                         {LoginUser.username}
                       </button>
-                   {LoginUser.isVendor && <ul className="dropdown-menu">
-                        <li>
-                          <Link className="dropdown-item" to="/verify">
-                            Get Verified
-                          </Link>
-                        </li>
-                        <li>
-                          <Link className="dropdown-item" to="/products" style={{textWrap:"wrap"}}>
-                            Manage Products and Cost
-                          </Link>
-                        </li>
 
-                        <li
-                          onClick={handleClick}
-                          style={{
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "flex-start",
-                            marginLeft: "18px",
-                          }}
-                        >
-                          <div>Logout</div>
-                        </li>
-                      </ul>}   
-                      {!LoginUser.isVendor && <ul className="dropdown-menu">
-                        <li>
-                          <Link className="dropdown-item" to="/rating">
-                            Rate the Vendors
-                          </Link>
-                        </li>
-                        <li>
-                          <Link className="dropdown-item" to="/view-rating">
-                            View Ratings
-                          </Link>
-                        </li>
-                        <li>
-                          <Link className="dropdown-item" to="/premium">
-                            Get Premium
-                          </Link>
-                        </li>
+                      {/* Vendor Dropdown Menu */}
+                      {LoginUser.isVendor && (
+                        <ul className="dropdown-menu">
+                          {!LoginUser.isCertified && (
+                            <li>
+                              <Link className="dropdown-item" to="/verify">
+                                Get Verified
+                              </Link>
+                            </li>
+                          )}
+                          <li>
+                            <Link
+                              className="dropdown-item"
+                              to="/products"
+                              style={{ textWrap: "wrap" }}
+                            >
+                              Manage Products and Cost
+                            </Link>
+                          </li>
+                          <li
+                            onClick={handleClick}
+                            style={{
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "flex-start",
+                              marginLeft: "18px",
+                            }}
+                          >
+                            <div>Logout</div>
+                          </li>
+                        </ul>
+                      )}
 
-                        <li
-                          onClick={handleClick}
-                          style={{
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "flex-start",
-                            marginLeft: "18px",
-                          }}
-                        >
-                          <div>Logout</div>
-                        </li>
-                      </ul>}  
+                      {/* Customer Dropdown Menu */}
+                      {!LoginUser.isVendor && (
+                        <ul className="dropdown-menu">
+                          <li>
+                            <Link className="dropdown-item" to="/rating">
+                              Rate the Vendors
+                            </Link>
+                          </li>
+                          <li>
+                            <Link className="dropdown-item" to="/view-rating">
+                              View Ratings
+                            </Link>
+                          </li>
+                          <li>
+                            <Link className="dropdown-item" to="/premium">
+                              Get Premium
+                            </Link>
+                          </li>
+                          <li
+                            onClick={handleClick}
+                            style={{
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "flex-start",
+                              marginLeft: "18px",
+                            }}
+                          >
+                            <div>Logout</div>
+                          </li>
+                        </ul>
+                      )}
                     </div>
                   </>
                 ) : (
@@ -256,6 +285,7 @@ console.log("navbar component",LoginUser)
           </div>
         </div>
       </nav>
+
       <div id="loginModal" className="modal fade" tabIndex={-1}>
         <div className="modal-dialog">
           <div className="modal-content">

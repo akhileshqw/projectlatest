@@ -175,6 +175,7 @@ app.post("/login-vendor", async (req, res) => {
     email: email,
     username: findUser.firstname + " " + findUser.lastname,
     isVendor: findUser.isVendor,
+    isCertified: findUser.isCertified,
   };
   if (findUser.password === password) {
     jwt.sign(
