@@ -11,6 +11,7 @@ import nodemailer from "nodemailer";
 
 import dotenv from "dotenv";
 import path from "path";
+import { certifiedVendorModal } from "../src/models/certifiedvendorSchema.js";
 
 dotenv.config({
   path: "../.env",
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/createaccount", async (req, res) => {
+  let iscertified = false;
   const {
     firstname,
     lastname,
@@ -55,6 +57,7 @@ app.post("/createaccount", async (req, res) => {
     res.status(200).send({ success: false, msg: "User already exists" });
     return;
   }
+
   //  code for encryption
   try {
     const createUser = await RegisterModel.create({
@@ -68,11 +71,13 @@ app.post("/createaccount", async (req, res) => {
       isVendor,
       work,
       rating,
+      isCertified: iscertified,
     });
     const userObj = {
       username: firstname + " " + lastname,
       email: email,
       isVendor: isVendor,
+      isCertified: iscertified,
     };
     // console.log("before jwt");
     jwt.sign(
@@ -98,6 +103,56 @@ app.post("/createaccount", async (req, res) => {
     );
     // console.log("after jwt");
     // console.log(res.getHeader())
+  } catch (error) {
+    res.status(400).json({ success: false, error: error });
+    console.log(error);
+  }
+});
+app.post("/certifyvendor", async (req, res) => {
+  const { name, email, phone, businessAddress, hasOtherBusiness, imageUrl } =
+    req.body;
+  let vendorName = name;
+  let vendorEmail = email;
+  let Address = businessAddress;
+  let anotherBusiness = hasOtherBusiness;
+
+  try {
+    const existingUser = await RegisterModel.findOne({ email });
+    if (!existingUser.isVendor) {
+      res.status(200).send({ success: false, msg: "you are not a vendor" });
+      return;
+    }
+    if (existingUser.isCertified) {
+      res
+        .status(200)
+        .send({ success: false, msg: "Vendor is already Certified" });
+      return;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  try {
+    const result = await RegisterModel.updateOne(
+      { email: email },
+      { $set: { isCertified: true } }
+    );
+  } catch (error) {}
+
+  //  code for encryption
+  try {
+    const certifiedVendor = await certifiedVendorModal.create({
+      vendorName,
+      vendorEmail,
+      phone,
+      Address,
+      anotherBusiness,
+      imageUrl,
+    });
+    // it is neccessary to refresh the databases so that new collection will appear
+    res.send({
+      success: true,
+      msg: "Application submitted successfully",
+    });
   } catch (error) {
     res.status(400).json({ success: false, error: error });
     console.log(error);

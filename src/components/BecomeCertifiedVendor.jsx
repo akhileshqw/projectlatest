@@ -1,12 +1,31 @@
 import React, { useState } from "react";
 
 const BecomeCertifiedVendor = () => {
+  const [imageUrl, setImageUrl] = useState();
+
+  const handleImageUpload = (event) => {
+    console.log("in method want");
+
+    const file = event.target.files[0];
+    console.log("file", file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        // console.log(base64String);
+        setImageUrl(base64String); // Store the Base64 string in state
+      };
+      reader.readAsDataURL(file); // Convert the file to Base64
+    }
+  };
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     businessAddress: "",
-    hasOtherBusiness: "",
+    hasOtherBusiness: false, // Boolean
     dairyReport: null,
   });
 
@@ -14,20 +33,24 @@ const BecomeCertifiedVendor = () => {
 
   // Handle form data changes
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+
     setFormData({
       ...formData,
-      [name]: value,
+      [name]:
+        type === "radio" && name === "hasOtherBusiness"
+          ? checked && value === "true"
+          : value,
     });
   };
 
   // Handle file upload
-  const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      dairyReport: e.target.files[0],
-    });
-  };
+  // const handleFileChange = (e) => {
+  //   setFormData({
+  //     ...formData,
+  //     dairyReport: e.target.files[0],
+  //   });
+  // };
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -38,27 +61,33 @@ const BecomeCertifiedVendor = () => {
       !formData.email ||
       !formData.phone ||
       !formData.businessAddress ||
-      !formData.hasOtherBusiness ||
-      !formData.dairyReport
+      formData.hasOtherBusiness === undefined
     ) {
       setMessage("Please fill out all fields and upload the required report.");
       return;
     }
-
-    setMessage("Submitting your application...");
-
-    // Simulate an API request for form submission
-    setTimeout(() => {
-      setMessage("Your application has been submitted successfully!");
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        businessAddress: "",
-        hasOtherBusiness: "",
-        dairyReport: null,
+    formData.imageUrl = imageUrl;
+    console.log(formData);
+    try {
+      let response = await fetch("http://localhost:3000/certifyvendor", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(formData),
       });
-    }, 2000);
+      let content = await response.json();
+      console.log("Server response:", content);
+
+      if (content.success) {
+        alert(content.msg);
+      } else {
+        alert("Application failed to submit");
+      }
+    } catch (error) {
+      console.error("Error during API request:", error);
+    }
   };
 
   return (
@@ -169,8 +198,8 @@ const BecomeCertifiedVendor = () => {
                 type="radio"
                 className="form-check-input"
                 name="hasOtherBusiness"
-                value="Yes"
-                checked={formData.hasOtherBusiness === "Yes"}
+                value={true}
+                checked={formData.hasOtherBusiness === true}
                 onChange={handleChange}
                 required
               />{" "}
@@ -181,8 +210,8 @@ const BecomeCertifiedVendor = () => {
                 type="radio"
                 className="form-check-input"
                 name="hasOtherBusiness"
-                value="No"
-                checked={formData.hasOtherBusiness === "No"}
+                value={false}
+                checked={formData.hasOtherBusiness === false}
                 onChange={handleChange}
               />{" "}
               No
@@ -199,7 +228,7 @@ const BecomeCertifiedVendor = () => {
             type="file"
             className="form-control"
             id="dairyReport"
-            onChange={handleFileChange}
+            onChange={(e) => handleImageUpload(e)}
             required
             style={{ padding: "10px", fontSize: "15px" }}
           />
