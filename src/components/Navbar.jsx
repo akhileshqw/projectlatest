@@ -196,7 +196,7 @@ const Navbar = () => {
                           <li>
                             <Link
                               className="dropdown-item"
-                              to="/products"
+                              to="/manage-products"
                               style={{ textWrap: "wrap" }}
                             >
                               Manage Products and Cost

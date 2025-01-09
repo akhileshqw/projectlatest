@@ -22,6 +22,7 @@ import Rating from "./components/Rating.jsx";
 import ViewRating from "./components/ViewRating.jsx";
 import RatingList from "./components/RatingList.jsx";
 import Verify from "./components/BecomeCertifiedVendor.jsx";
+import Manage from "./components/Manage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,8 @@ const router = createBrowserRouter([
       {path:"/rating",element:<Rating />},
       {path:"/view-rating",element:<RatingList />},
       {path:"/verify",element:<Verify/>},
+      {path:"/manage-products",element:<Manage/>},
+      
     ],
   },
 ]);
