@@ -12,6 +12,7 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import path from "path";
 import { certifiedVendorModal } from "../src/models/certifiedvendorSchema.js";
+import { manageProductsModal } from "../src/models/manageProductsSchema.js";
 
 dotenv.config({
   path: "../.env",
@@ -52,12 +53,75 @@ app.post("/createaccount", async (req, res) => {
     rating,
   } = req.body;
 
+  let vendorEmail=email
+  let vendorLocation=address
+  let cowMilkPrice=100
+  let cowMilkSells=false
+  let buffaloMilkPrice=100
+  let buffaloMilkSells=false
+  let camelMilkPrice=100
+  let camelMilkSells=false
+  let donkeyMilkPrice=100
+  let donkeyMilkSells=false
+  let goatMilkPrice=100
+  let goatMilkSells=false
+let cowGheePrice=100
+let cowGheeSells=false
+let buffaloGheePrice=100
+let buffaloGheeSells=false
+let cowCurdPrice=100
+let cowCurdSells=false
+let buffaloCurdPrice=100
+let buffaloCurdSells=false
+ 
   const existingUser = await RegisterModel.findOne({ email });
   if (existingUser) {
     res.status(200).send({ success: false, msg: "User already exists" });
     return;
   }
 
+
+  if(isVendor){
+
+
+    const createUser = await manageProductsModal.create({
+      vendorEmail,
+      vendorLocation,
+      phone,
+      cowMilkPrice,
+      cowMilkSells,
+      buffaloMilkPrice,
+      buffaloMilkSells,
+      camelMilkPrice,
+      camelMilkSells,
+      donkeyMilkPrice,
+      donkeyMilkSells,
+      goatMilkPrice,
+      goatMilkSells,
+      cowGheePrice,
+      cowGheeSells,
+      buffaloGheePrice,
+      buffaloGheeSells,
+      cowCurdPrice,
+      cowCurdSells,
+      buffaloCurdPrice,
+      buffaloCurdSells,
+    });
+ 
+
+
+
+
+
+
+
+
+
+  
+}
+
+
+ 
   //  code for encryption
   try {
     const createUser = await RegisterModel.create({
@@ -73,6 +137,7 @@ app.post("/createaccount", async (req, res) => {
       rating,
       isCertified: iscertified,
     });
+ 
     const userObj = {
       username: firstname + " " + lastname,
       email: email,

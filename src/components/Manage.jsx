@@ -4,6 +4,7 @@ const Manage = () => {
   const [vendorDetails, setVendorDetails] = useState({
     email: "vendor@example.com",
     location: "123 Vendor Street, City, Country",
+    phoneNumber: "123-456-7890", // Added phone number
     dairyProducts: [
       { name: "Cow Milk", price: 50, unit: "per liter", sells: true },
       { name: "Buffalo Milk", price: 50, unit: "per liter", sells: true },
@@ -137,6 +138,35 @@ const Manage = () => {
             )}
           </span>
         </p>
+        <p>
+          <strong>Phone Number: </strong>
+          <span
+            onDoubleClick={() => handleDoubleClick("phoneNumber")}
+            style={{
+              cursor: "pointer",
+              color: editing?.key === "phoneNumber" ? "blue" : "black",
+              textDecoration:
+                editing?.key === "phoneNumber" ? "underline" : "none",
+            }}
+          >
+            {editing?.key === "phoneNumber" ? (
+              <input
+                type="text"
+                value={editedValue}
+                onChange={handleInputChange}
+                autoFocus
+                style={{
+                  border: "1px solid #ddd",
+                  borderRadius: "5px",
+                  padding: "5px",
+                  width: "300px",
+                }}
+              />
+            ) : (
+              vendorDetails.phoneNumber
+            )}
+          </span>
+        </p>
       </div>
 
       {/* Instruction for editing */}
@@ -180,10 +210,7 @@ const Manage = () => {
                 <td>{product.name}</td>
                 <td
                   onDoubleClick={() =>
-                    handleDoubleClick(
-                      "dairyProductPrice",
-                      product.originalIndex
-                    )
+                    handleDoubleClick("dairyProductPrice", product.originalIndex)
                   }
                   style={{
                     cursor: "pointer",
@@ -245,10 +272,69 @@ const Manage = () => {
                 <td>{product.name}</td>
                 <td
                   onDoubleClick={() =>
-                    handleDoubleClick(
-                      "dairyProductPrice",
-                      product.originalIndex
-                    )
+                    handleDoubleClick("dairyProductPrice", product.originalIndex)
+                  }
+                  style={{
+                    cursor: "pointer",
+                    color:
+                      editing?.index === product.originalIndex
+                        ? "blue"
+                        : "black",
+                    textDecoration:
+                      editing?.index === product.originalIndex
+                        ? "underline"
+                        : "none",
+                  }}
+                >
+                  {editing?.key === "dairyProductPrice" &&
+                  editing?.index === product.originalIndex ? (
+                    <input
+                      type="number"
+                      value={editedValue}
+                      onChange={handleInputChange}
+                      autoFocus
+                      style={{
+                        width: "80px",
+                        border: "1px solid #ddd",
+                        borderRadius: "5px",
+                        padding: "3px",
+                      }}
+                    />
+                  ) : (
+                    `₹${product.price}`
+                  )}
+                </td>
+                <td>{product.unit}</td>
+                <td
+                  onClick={() => toggleSells(product.originalIndex)}
+                  style={{
+                    cursor: "pointer",
+                    color: product.sells ? "green" : "red",
+                  }}
+                >
+                  {product.sells ? "Yes" : "No"}
+                </td>
+              </tr>
+            ))}
+
+          {/* Curd Section */}
+          <tr>
+            <th
+              colSpan="4"
+              style={{ textAlign: "center", backgroundColor: "#f2f2f2" }}
+            >
+              Curd Section
+            </th>
+          </tr>
+          {vendorDetails.dairyProducts
+            .map((product, originalIndex) => ({ ...product, originalIndex }))
+            .filter((product) => product.name.includes("Curd"))
+            .map((product) => (
+              <tr key={product.originalIndex}>
+                <td>{product.name}</td>
+                <td
+                  onDoubleClick={() =>
+                    handleDoubleClick("dairyProductPrice", product.originalIndex)
                   }
                   style={{
                     cursor: "pointer",
@@ -296,11 +382,11 @@ const Manage = () => {
       </table>
 
       {showSaveButton && (
-        <div className="d-flex justify-content-end mt-4">
+        <div className="text-center">
           <button
-            className="btn btn-primary"
+            className="btn btn-success"
             onClick={handleSave}
-            style={{ fontWeight: "bold" }}
+            style={{ width: "150px", fontWeight: "bold" }}
           >
             Save Changes
           </button>
