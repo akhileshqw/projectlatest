@@ -8,9 +8,9 @@ const Manage = () => {
   const { LoginUser } = useContext(userContext);
   const [products, setProducts] = useState(null);
   const [vendorDetails, setVendorDetails] = useState({
-    email: "abc@gmail.com",
-    location: "123 Vendor Street, City, Country",
-    phoneNumber: "123-456-7890",
+    vendorEmail: "abc@gmail.com",
+    vendorLocation: "123 Vendor Street, City, Country",
+    phone: "123-456-7890",
     dairyProducts: [
       { name: "Cow Milk", price: 50, unit: "per liter", sells: true },
       { name: "Buffalo Milk", price: 50, unit: "per liter", sells: true },
@@ -46,8 +46,6 @@ const Manage = () => {
         }
         const data = await response.json();
         setProducts(data[0]);
-
-        console.log("products", products);
       } catch (err) {
         // setError(err.message);
       }
@@ -57,11 +55,12 @@ const Manage = () => {
 
   useEffect(() => {
     if (products) {
-      console.log(products.cowMilkSells);
+      console.log(products, "products");
       setVendorDetails({
-        email: products.vendorEmail || "akhileshchikatla6@gmail.com",
-        location: products.vendorLocation || "123 Vendor Street, City, Country",
-        phoneNumber: products.phone || "123-456-7890",
+        vendorEmail: products.vendorEmail || "akhileshchikatla6@gmail.com",
+        vendorLocation:
+          products.vendorLocation || "123 Vendor Street, City, Country",
+        phone: products.phone || "123-456-7890",
         dairyProducts:
           [
             {
@@ -74,7 +73,7 @@ const Manage = () => {
               name: "Buffalo Milk",
               price: products.buffaloMilkPrice,
               unit: "per liter",
-              sells: products.buffaloMikSells,
+              sells: products.buffaloMilkSells,
             },
             {
               name: "Camel Milk",
@@ -104,7 +103,7 @@ const Manage = () => {
               name: "Buffalo Ghee",
               price: products.buffaloGheePrice,
               unit: "per kg",
-              sells: products.bufffaloGheeSells,
+              sells: products.buffaloGheeSells,
             },
             {
               name: "Cow Curd",
@@ -136,8 +135,46 @@ const Manage = () => {
     setShowSaveButton(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     console.log("Saving:", editing, "Edited Value:", editedValue);
+    async function rep() {
+      console.log("in rep", vendorDetails);
+      const updatedData = {
+        _id: products._id,
+        vendorEmail: vendorDetails.vendorEmail,
+        vendorLocation: vendorDetails.vendorLocation,
+        phone: vendorDetails.phone,
+        dairyProducts: vendorDetails.dairyProducts.map((product) => ({
+          price: product.price,
+          sells: product.sells,
+        })),
+      };
+      console.log("hello");
+      console.log("Updated Data:", updatedData);
+
+      try {
+        const response = await fetch("http://localhost:3000/updateVendor", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(updatedData),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to update vendor details.");
+        }
+
+        const result = await response.json();
+        console.log("Update successful:", result);
+        // Handle successful update (e.g., show a success message)
+      } catch (err) {
+        console.error("Error updating vendor details:", err);
+        alert("There was an error updating the details.");
+      }
+    }
+
     if (editing?.key === "dairyProductPrice") {
       if (isNaN(parseFloat(editedValue))) {
         alert("Invalid price value. Please enter a valid number.");
@@ -146,8 +183,50 @@ const Manage = () => {
       const updatedProducts = [...vendorDetails.dairyProducts];
       updatedProducts[editing.index].price = parseFloat(editedValue);
       setVendorDetails({ ...vendorDetails, dairyProducts: updatedProducts });
-    } else {
-      setVendorDetails({ ...vendorDetails, [editing.key]: editedValue });
+
+      await rep();
+    } else if (
+      ["vendorEmail", "vendorLocation", "phone"].includes(editing?.key)
+    ) {
+      const updatedVendorDetails = {
+        ...vendorDetails,
+        [editing.key]: editedValue,
+      };
+      const updatedData = {
+        _id: products._id,
+        vendorEmail: updatedVendorDetails.vendorEmail,
+        vendorLocation: updatedVendorDetails.vendorLocation,
+        phone: updatedVendorDetails.phone,
+        dairyProducts: updatedVendorDetails.dairyProducts.map((product) => ({
+          price: product.price,
+          sells: product.sells,
+        })),
+      };
+      console.log("hello");
+      console.log("Updated Data:", updatedData);
+
+      try {
+        const response = await fetch("http://localhost:3000/updateVendor", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(updatedData),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to update vendor details.");
+        }
+
+        const result = await response.json();
+        console.log("Update successful:", result);
+        // Handle successful update (e.g., show a success message)
+        setVendorDetails(updatedVendorDetails);
+      } catch (err) {
+        console.error("Error updating vendor details:", err);
+        alert("There was an error updating the details.");
+      }
     }
     setEditing(null);
     setShowSaveButton(false);
@@ -156,13 +235,49 @@ const Manage = () => {
   const handleInputChange = (e) => {
     setEditedValue(e.target.value);
   };
-
-  const toggleSells = (index) => {
+  const toggleSells = async (index) => {
     console.log("Toggling sells for index:", index);
+
+    // Update the local state
     const updatedProducts = [...vendorDetails.dairyProducts];
     updatedProducts[index].sells = !updatedProducts[index].sells;
     setVendorDetails({ ...vendorDetails, dairyProducts: updatedProducts });
-    setShowSaveButton(true);
+
+    // Prepare the updated data for the backend
+    const updatedData = {
+      _id: products._id, // Use the product's _id to identify which record to update
+      vendorEmail: vendorDetails.vendorEmail,
+      vendorLocation: vendorDetails.vendorLocation,
+      phone: vendorDetails.phone,
+      dairyProducts: updatedProducts.map((product) => ({
+        price: product.price,
+        sells: product.sells,
+      })),
+    };
+
+    console.log("Updated Data for Sells:", updatedData);
+
+    try {
+      const response = await fetch("http://localhost:3000/updateVendor", {
+        method: "POST", // Use PUT or PATCH based on your backend
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Include credentials if required
+        body: JSON.stringify(updatedData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update vendor details.");
+      }
+
+      const result = await response.json();
+      console.log("Sells update successful:", result);
+      // Optionally display a success message
+    } catch (err) {
+      console.error(err);
+      alert("There was an error updating the sells status.");
+    }
   };
 
   const groupProducts = (category) =>
@@ -201,14 +316,15 @@ const Manage = () => {
         <p>
           <strong>Email: </strong>
           <span
-            onDoubleClick={() => handleDoubleClick("email")}
+            onDoubleClick={() => handleDoubleClick("vendorEmail")}
             style={{
               cursor: "pointer",
-              color: editing?.key === "email" ? "blue" : "black",
-              textDecoration: editing?.key === "email" ? "underline" : "none",
+              color: editing?.key === "vendorEmail" ? "blue" : "black",
+              textDecoration:
+                editing?.key === "vendorEmail" ? "underline" : "none",
             }}
           >
-            {editing?.key === "email" ? (
+            {editing?.key === "vendorEmail" ? (
               <input
                 type="text"
                 value={editedValue}
@@ -222,22 +338,22 @@ const Manage = () => {
                 }}
               />
             ) : (
-              vendorDetails.email
+              vendorDetails.vendorEmail
             )}
           </span>
         </p>
         <p>
           <strong>Location: </strong>
           <span
-            onDoubleClick={() => handleDoubleClick("location")}
+            onDoubleClick={() => handleDoubleClick("vendorLocation")}
             style={{
               cursor: "pointer",
-              color: editing?.key === "location" ? "blue" : "black",
+              color: editing?.key === "vendorLocation" ? "blue" : "black",
               textDecoration:
-                editing?.key === "location" ? "underline" : "none",
+                editing?.key === "vendorLocation" ? "underline" : "none",
             }}
           >
-            {editing?.key === "location" ? (
+            {editing?.key === "vendorLocation" ? (
               <input
                 type="text"
                 value={editedValue}
@@ -251,22 +367,21 @@ const Manage = () => {
                 }}
               />
             ) : (
-              vendorDetails.location
+              vendorDetails.vendorLocation
             )}
           </span>
         </p>
         <p>
           <strong>Phone Number: </strong>
           <span
-            onDoubleClick={() => handleDoubleClick("phoneNumber")}
+            onDoubleClick={() => handleDoubleClick("phone")}
             style={{
               cursor: "pointer",
-              color: editing?.key === "phoneNumber" ? "blue" : "black",
-              textDecoration:
-                editing?.key === "phoneNumber" ? "underline" : "none",
+              color: editing?.key === "phone" ? "blue" : "black",
+              textDecoration: editing?.key === "phone" ? "underline" : "none",
             }}
           >
-            {editing?.key === "phoneNumber" ? (
+            {editing?.key === "phone" ? (
               <input
                 type="text"
                 value={editedValue}
@@ -280,12 +395,14 @@ const Manage = () => {
                 }}
               />
             ) : (
-              vendorDetails.phoneNumber
+              vendorDetails.phone
             )}
           </span>
         </p>
       </div>
-
+      <p style={{ textAlign: "center", fontStyle: "italic", fontSize: "18px" }}>
+        Double click to edit
+      </p>
       {/* Dairy Products Section */}
       {["Milk", "Ghee", "Curd"].map((category) => (
         <div key={category} className="mb-4">

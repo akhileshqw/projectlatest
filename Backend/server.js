@@ -434,6 +434,65 @@ app.post("/getdiaryproducts", async (req, res) => {
   res.send(vendorsData);
 });
 
+app.post("/updateVendor", async (req, res) => {
+  const { _id, vendorEmail, vendorLocation, phone, dairyProducts } = req.body;
+
+  let cowMilkPrice = dairyProducts[0].price;
+  let cowMilkSells = dairyProducts[0].sells;
+  let buffaloMilkPrice = dairyProducts[1].price;
+  let buffaloMilkSells = dairyProducts[1].sells;
+  let camelMilkPrice = dairyProducts[2].price;
+  let camelMilkSells = dairyProducts[2].sells;
+  let donkeyMilkPrice = dairyProducts[3].price;
+  let donkeyMilkSells = dairyProducts[3].sells;
+  let goatMilkPrice = dairyProducts[4].price;
+  let goatMilkSells = dairyProducts[4].sells;
+  let cowGheePrice = dairyProducts[5].price;
+  let cowGheeSells = dairyProducts[5].sells;
+  let buffaloGheePrice = dairyProducts[6].price;
+  let buffaloGheeSells = dairyProducts[6].sells;
+  let cowCurdPrice = dairyProducts[7].price;
+  let cowCurdSells = dairyProducts[7].sells;
+  let buffaloCurdPrice = dairyProducts[8].price;
+  let buffaloCurdSells = dairyProducts[8].sells;
+  try {
+    // Update logic using your database (e.g., MongoDB)
+    const result = await manageProductsModal.findByIdAndUpdate(
+      _id,
+      {
+        vendorEmail,
+        vendorLocation,
+        phone,
+        cowMilkPrice,
+        cowMilkSells,
+        buffaloMilkPrice,
+        buffaloMilkSells,
+        camelMilkPrice,
+        camelMilkSells,
+        donkeyMilkPrice,
+        donkeyMilkSells,
+        goatMilkPrice,
+        goatMilkSells,
+        cowGheePrice,
+        cowGheeSells,
+        buffaloGheePrice,
+        buffaloGheeSells,
+        cowCurdPrice,
+        cowCurdSells,
+        buffaloCurdPrice,
+        buffaloCurdSells,
+      },
+      { new: true }
+    );
+    res.status(200).json({ message: "Vendor updated successfully", result });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to update vendor" });
+  }
+});
+
+ 
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
