@@ -435,7 +435,29 @@ app.post("/getdiaryproducts", async (req, res) => {
 });
 
 app.post("/updateVendor", async (req, res) => {
-  const { _id, vendorEmail, vendorLocation, phone, dairyProducts } = req.body;
+  const {
+    _id,
+    vendorEmail,
+    vendorLocation,
+    phone,
+    dairyProducts,
+    activate,
+    host,
+  } = req.body;
+  if (activate != undefined && activate == true) {
+    try {
+      const result = await RegisterModel.updateOne(
+        { email: host },
+        {
+          $set: {
+            vendorEmail: vendorEmail,
+            address: vendorLocation,
+            phone: phone,
+          },
+        }
+      );
+    } catch (error) {}
+  }
 
   let cowMilkPrice = dairyProducts[0].price;
   let cowMilkSells = dairyProducts[0].sells;
@@ -490,8 +512,6 @@ app.post("/updateVendor", async (req, res) => {
     res.status(500).json({ error: "Failed to update vendor" });
   }
 });
-
- 
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

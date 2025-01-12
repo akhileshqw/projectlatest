@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { userContext } from "../context/userContext";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 
 const Manage = () => {
   const [editing, setEditing] = useState(null);
@@ -7,6 +8,10 @@ const Manage = () => {
   const [showSaveButton, setShowSaveButton] = useState(false);
   const { LoginUser } = useContext(userContext);
   const [products, setProducts] = useState(null);
+  const notify = () =>
+    toast("please re-login for better experience", {
+      position: "top-center",
+    });
   const [vendorDetails, setVendorDetails] = useState({
     vendorEmail: "abc@gmail.com",
     vendorLocation: "123 Vendor Street, City, Country",
@@ -193,6 +198,8 @@ const Manage = () => {
         [editing.key]: editedValue,
       };
       const updatedData = {
+        activate: true,
+        host: LoginUser.email,
         _id: products._id,
         vendorEmail: updatedVendorDetails.vendorEmail,
         vendorLocation: updatedVendorDetails.vendorLocation,
@@ -227,6 +234,7 @@ const Manage = () => {
         console.error("Error updating vendor details:", err);
         alert("There was an error updating the details.");
       }
+      if (editing.key === "vendorEmail" || editing.key === "phone") notify();
     }
     setEditing(null);
     setShowSaveButton(false);
@@ -304,6 +312,8 @@ const Manage = () => {
         boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
       }}
     >
+      <ToastContainer position="top-center" transition={Bounce} />
+
       <h2
         className="text-center mb-4"
         style={{ fontWeight: "bold", color: "#333" }}
