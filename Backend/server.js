@@ -53,37 +53,34 @@ app.post("/createaccount", async (req, res) => {
     rating,
   } = req.body;
 
-  let vendorEmail=email
-  let vendorLocation=address
-  let cowMilkPrice=100
-  let cowMilkSells=false
-  let buffaloMilkPrice=100
-  let buffaloMilkSells=false
-  let camelMilkPrice=100
-  let camelMilkSells=false
-  let donkeyMilkPrice=100
-  let donkeyMilkSells=false
-  let goatMilkPrice=100
-  let goatMilkSells=false
-let cowGheePrice=100
-let cowGheeSells=false
-let buffaloGheePrice=100
-let buffaloGheeSells=false
-let cowCurdPrice=100
-let cowCurdSells=false
-let buffaloCurdPrice=100
-let buffaloCurdSells=false
- 
+  let vendorEmail = email;
+  let vendorLocation = address;
+  let cowMilkPrice = 100;
+  let cowMilkSells = false;
+  let buffaloMilkPrice = 100;
+  let buffaloMilkSells = false;
+  let camelMilkPrice = 100;
+  let camelMilkSells = false;
+  let donkeyMilkPrice = 100;
+  let donkeyMilkSells = false;
+  let goatMilkPrice = 100;
+  let goatMilkSells = false;
+  let cowGheePrice = 100;
+  let cowGheeSells = false;
+  let buffaloGheePrice = 100;
+  let buffaloGheeSells = false;
+  let cowCurdPrice = 100;
+  let cowCurdSells = false;
+  let buffaloCurdPrice = 100;
+  let buffaloCurdSells = false;
+
   const existingUser = await RegisterModel.findOne({ email });
   if (existingUser) {
     res.status(200).send({ success: false, msg: "User already exists" });
     return;
   }
 
-
-  if(isVendor){
-
-
+  if (isVendor) {
     const createUser = await manageProductsModal.create({
       vendorEmail,
       vendorLocation,
@@ -107,21 +104,8 @@ let buffaloCurdSells=false
       buffaloCurdPrice,
       buffaloCurdSells,
     });
- 
+  }
 
-
-
-
-
-
-
-
-
-  
-}
-
-
- 
   //  code for encryption
   try {
     const createUser = await RegisterModel.create({
@@ -137,7 +121,7 @@ let buffaloCurdSells=false
       rating,
       isCertified: iscertified,
     });
- 
+
     const userObj = {
       username: firstname + " " + lastname,
       email: email,
@@ -438,6 +422,14 @@ app.post("/ratingsdata", async (req, res) => {
   const { givenby } = req.body;
   // console.log(givenby)
   const vendorsData = await RatingModal.find({ givenby: givenby });
+  // console.log("vd",vendorsData)
+  res.send(vendorsData);
+});
+app.post("/getdiaryproducts", async (req, res) => {
+  const { givenby } = req.body;
+  let vendorEmail = givenby;
+  // console.log(givenby)
+  const vendorsData = await manageProductsModal.find({ vendorEmail: givenby });
   // console.log("vd",vendorsData)
   res.send(vendorsData);
 });

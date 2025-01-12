@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { userContext } from "../context/userContext";
 
 const Manage = () => {
+  const [editing, setEditing] = useState(null);
+  const [editedValue, setEditedValue] = useState("");
+  const [showSaveButton, setShowSaveButton] = useState(false);
+  const { LoginUser } = useContext(userContext);
+  const [products, setProducts] = useState(null);
   const [vendorDetails, setVendorDetails] = useState({
-    email: "vendor@example.com",
+    email: "abc@gmail.com",
     location: "123 Vendor Street, City, Country",
-    phoneNumber: "123-456-7890", // Added phone number
+    phoneNumber: "123-456-7890",
     dairyProducts: [
       { name: "Cow Milk", price: 50, unit: "per liter", sells: true },
       { name: "Buffalo Milk", price: 50, unit: "per liter", sells: true },
@@ -18,14 +24,112 @@ const Manage = () => {
     ],
   });
 
-  const [editing, setEditing] = useState(null);
-  const [editedValue, setEditedValue] = useState("");
-  const [showSaveButton, setShowSaveButton] = useState(false);
+  useEffect(() => {
+    const fetchRatings = async () => {
+      if (!LoginUser || !LoginUser.email) {
+        return;
+      }
+      const give = {
+        givenby: LoginUser.email,
+      };
+      try {
+        const response = await fetch("http://localhost:3000/getdiaryproducts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(give),
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        const data = await response.json();
+        setProducts(data[0]);
 
-  const handleDoubleClick = (key, index = null) => {
-    setEditing({ key, index });
+        console.log("products", products);
+      } catch (err) {
+        // setError(err.message);
+      }
+    };
+    fetchRatings();
+  }, [LoginUser]);
+
+  useEffect(() => {
+    if (products) {
+      console.log(products.cowMilkSells);
+      setVendorDetails({
+        email: products.vendorEmail || "akhileshchikatla6@gmail.com",
+        location: products.vendorLocation || "123 Vendor Street, City, Country",
+        phoneNumber: products.phone || "123-456-7890",
+        dairyProducts:
+          [
+            {
+              name: "Cow Milk",
+              price: products.cowMilkPrice,
+              unit: "per liter",
+              sells: products.cowMilkSells,
+            },
+            {
+              name: "Buffalo Milk",
+              price: products.buffaloMilkPrice,
+              unit: "per liter",
+              sells: products.buffaloMikSells,
+            },
+            {
+              name: "Camel Milk",
+              price: products.camelMilkPrice,
+              unit: "per liter",
+              sells: products.camelMilkSells,
+            },
+            {
+              name: "Donkey Milk",
+              price: products.donkeyMilkPrice,
+              unit: "per liter",
+              sells: products.donkeyMilkSells,
+            },
+            {
+              name: "Goat Milk",
+              price: products.goatMilkPrice,
+              unit: "per liter",
+              sells: products.goatMilkSells,
+            },
+            {
+              name: "Cow Ghee",
+              price: products.cowGheePrice,
+              unit: "per kg",
+              sells: products.cowGheeSells,
+            },
+            {
+              name: "Buffalo Ghee",
+              price: products.buffaloGheePrice,
+              unit: "per kg",
+              sells: products.bufffaloGheeSells,
+            },
+            {
+              name: "Cow Curd",
+              price: products.cowCurdPrice,
+              unit: "per kg",
+              sells: products.cowCurdSells,
+            },
+            {
+              name: "Buffalo Curd",
+              price: products.buffaloCurdPrice,
+              unit: "per kg",
+              sells: products.buffaloCurdSells,
+            },
+          ] || [],
+      });
+    }
+  }, [products]);
+
+  const handleDoubleClick = (key, originalIndex = null) => {
+    console.log("Double-clicked:", key, "Index:", originalIndex);
+    setEditing({ key, index: originalIndex });
     if (key === "dairyProductPrice") {
-      setEditedValue(vendorDetails.dairyProducts[index].price);
+      setEditedValue(
+        vendorDetails.dairyProducts[originalIndex].price.toString()
+      );
     } else {
       setEditedValue(vendorDetails[key]);
     }
@@ -33,7 +137,12 @@ const Manage = () => {
   };
 
   const handleSave = () => {
+    console.log("Saving:", editing, "Edited Value:", editedValue);
     if (editing?.key === "dairyProductPrice") {
+      if (isNaN(parseFloat(editedValue))) {
+        alert("Invalid price value. Please enter a valid number.");
+        return;
+      }
       const updatedProducts = [...vendorDetails.dairyProducts];
       updatedProducts[editing.index].price = parseFloat(editedValue);
       setVendorDetails({ ...vendorDetails, dairyProducts: updatedProducts });
@@ -49,15 +158,23 @@ const Manage = () => {
   };
 
   const toggleSells = (index) => {
+    console.log("Toggling sells for index:", index);
     const updatedProducts = [...vendorDetails.dairyProducts];
     updatedProducts[index].sells = !updatedProducts[index].sells;
     setVendorDetails({ ...vendorDetails, dairyProducts: updatedProducts });
     setShowSaveButton(true);
   };
 
-  useEffect(() => {
-    console.log("Fetched vendor details", vendorDetails);
-  }, []);
+  const groupProducts = (category) =>
+    vendorDetails.dairyProducts
+      .map((product, originalIndex) => ({ ...product, originalIndex }))
+      .filter((product) =>
+        category === "Milk"
+          ? product.name.includes("Milk")
+          : category === "Ghee"
+          ? product.name.includes("Ghee")
+          : product.name.includes("Curd")
+      );
 
   return (
     <div
@@ -169,217 +286,77 @@ const Manage = () => {
         </p>
       </div>
 
-      {/* Instruction for editing */}
-      <p
-        style={{
-          fontStyle: "italic",
-          color: "#555",
-          marginBottom: "20px",
-          textAlign: "center",
-        }}
-      >
-        Double-click on any item to edit.
-      </p>
-
-      {/* Dairy Products Table */}
-      <h4 style={{ color: "#555" }}>Dairy Products</h4>
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Unit</th>
-            <th>Sells</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* Milk Section */}
-          <tr>
-            <th
-              colSpan="4"
-              style={{ textAlign: "center", backgroundColor: "#f2f2f2" }}
-            >
-              Milk Section
-            </th>
-          </tr>
-          {vendorDetails.dairyProducts
-            .map((product, originalIndex) => ({ ...product, originalIndex }))
-            .filter((product) => product.name.includes("Milk"))
-            .map((product) => (
-              <tr key={product.originalIndex}>
-                <td>{product.name}</td>
-                <td
-                  onDoubleClick={() =>
-                    handleDoubleClick("dairyProductPrice", product.originalIndex)
-                  }
-                  style={{
-                    cursor: "pointer",
-                    color:
-                      editing?.index === product.originalIndex
-                        ? "blue"
-                        : "black",
-                    textDecoration:
-                      editing?.index === product.originalIndex
-                        ? "underline"
-                        : "none",
-                  }}
-                >
-                  {editing?.key === "dairyProductPrice" &&
-                  editing?.index === product.originalIndex ? (
-                    <input
-                      type="number"
-                      value={editedValue}
-                      onChange={handleInputChange}
-                      autoFocus
-                      style={{
-                        width: "80px",
-                        border: "1px solid #ddd",
-                        borderRadius: "5px",
-                        padding: "3px",
-                      }}
-                    />
-                  ) : (
-                    `₹${product.price}`
-                  )}
-                </td>
-                <td>{product.unit}</td>
-                <td
-                  onClick={() => toggleSells(product.originalIndex)}
-                  style={{
-                    cursor: "pointer",
-                    color: product.sells ? "green" : "red",
-                  }}
-                >
-                  {product.sells ? "Yes" : "No"}
-                </td>
+      {/* Dairy Products Section */}
+      {["Milk", "Ghee", "Curd"].map((category) => (
+        <div key={category} className="mb-4">
+          <h4
+            style={{
+              fontWeight: "bold",
+              color: "#555",
+              marginTop: "20px",
+              marginBottom: "10px",
+            }}
+          >
+            {category} Section
+          </h4>
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Unit</th>
+                <th>Sells</th>
               </tr>
-            ))}
-
-          {/* Ghee Section */}
-          <tr>
-            <th
-              colSpan="4"
-              style={{ textAlign: "center", backgroundColor: "#f2f2f2" }}
-            >
-              Ghee Section
-            </th>
-          </tr>
-          {vendorDetails.dairyProducts
-            .map((product, originalIndex) => ({ ...product, originalIndex }))
-            .filter((product) => product.name.includes("Ghee"))
-            .map((product) => (
-              <tr key={product.originalIndex}>
-                <td>{product.name}</td>
-                <td
-                  onDoubleClick={() =>
-                    handleDoubleClick("dairyProductPrice", product.originalIndex)
-                  }
-                  style={{
-                    cursor: "pointer",
-                    color:
-                      editing?.index === product.originalIndex
-                        ? "blue"
-                        : "black",
-                    textDecoration:
-                      editing?.index === product.originalIndex
-                        ? "underline"
-                        : "none",
-                  }}
-                >
-                  {editing?.key === "dairyProductPrice" &&
-                  editing?.index === product.originalIndex ? (
-                    <input
-                      type="number"
-                      value={editedValue}
-                      onChange={handleInputChange}
-                      autoFocus
+            </thead>
+            <tbody>
+              {groupProducts(category).map((product) => (
+                <tr key={product.originalIndex}>
+                  <td>{product.name}</td>
+                  <td>
+                    {editing?.key === "dairyProductPrice" &&
+                    editing.index === product.originalIndex ? (
+                      <input
+                        type="number"
+                        value={editedValue}
+                        onChange={handleInputChange}
+                        autoFocus
+                      />
+                    ) : (
+                      <span
+                        onDoubleClick={() =>
+                          handleDoubleClick(
+                            "dairyProductPrice",
+                            product.originalIndex
+                          )
+                        }
+                        style={{ cursor: "pointer" }}
+                      >
+                        {product.price}
+                      </span>
+                    )}
+                  </td>
+                  <td>{product.unit}</td>
+                  <td>
+                    <button
+                      onClick={() => toggleSells(product.originalIndex)}
+                      className={`btn ${
+                        product.sells ? "btn-success" : "btn-danger"
+                      }`}
                       style={{
-                        width: "80px",
-                        border: "1px solid #ddd",
-                        borderRadius: "5px",
-                        padding: "3px",
+                        borderRadius: "50px",
+                        padding: "5px 15px",
+                        fontWeight: "bold",
                       }}
-                    />
-                  ) : (
-                    `₹${product.price}`
-                  )}
-                </td>
-                <td>{product.unit}</td>
-                <td
-                  onClick={() => toggleSells(product.originalIndex)}
-                  style={{
-                    cursor: "pointer",
-                    color: product.sells ? "green" : "red",
-                  }}
-                >
-                  {product.sells ? "Yes" : "No"}
-                </td>
-              </tr>
-            ))}
-
-          {/* Curd Section */}
-          <tr>
-            <th
-              colSpan="4"
-              style={{ textAlign: "center", backgroundColor: "#f2f2f2" }}
-            >
-              Curd Section
-            </th>
-          </tr>
-          {vendorDetails.dairyProducts
-            .map((product, originalIndex) => ({ ...product, originalIndex }))
-            .filter((product) => product.name.includes("Curd"))
-            .map((product) => (
-              <tr key={product.originalIndex}>
-                <td>{product.name}</td>
-                <td
-                  onDoubleClick={() =>
-                    handleDoubleClick("dairyProductPrice", product.originalIndex)
-                  }
-                  style={{
-                    cursor: "pointer",
-                    color:
-                      editing?.index === product.originalIndex
-                        ? "blue"
-                        : "black",
-                    textDecoration:
-                      editing?.index === product.originalIndex
-                        ? "underline"
-                        : "none",
-                  }}
-                >
-                  {editing?.key === "dairyProductPrice" &&
-                  editing?.index === product.originalIndex ? (
-                    <input
-                      type="number"
-                      value={editedValue}
-                      onChange={handleInputChange}
-                      autoFocus
-                      style={{
-                        width: "80px",
-                        border: "1px solid #ddd",
-                        borderRadius: "5px",
-                        padding: "3px",
-                      }}
-                    />
-                  ) : (
-                    `₹${product.price}`
-                  )}
-                </td>
-                <td>{product.unit}</td>
-                <td
-                  onClick={() => toggleSells(product.originalIndex)}
-                  style={{
-                    cursor: "pointer",
-                    color: product.sells ? "green" : "red",
-                  }}
-                >
-                  {product.sells ? "Yes" : "No"}
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+                    >
+                      {product.sells ? "Yes" : "No"}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ))}
 
       {showSaveButton && (
         <div className="text-center">
