@@ -11,5 +11,8 @@ const registerSchema = new mongoose.Schema({
   work: { type: String },
   rating: { type: Number },
   isCertified: { type: Boolean, default: false },
+  milk: { type: Boolean, default: false },
+  curd: { type: Boolean, default: false },
+  ghee: { type: Boolean, default: false },
 });
 export const RegisterModel = mongoose.model("register", registerSchema);

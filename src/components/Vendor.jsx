@@ -15,7 +15,7 @@ const Vendor = () => {
   const [certified, setCertified] = useState(false);
   const { LoginUser } = useContext(userContext);
 
-  const applyFilters = () => {
+  const applyFilters = async () => {
     // let np = [];
     // let strp = [];
     // if (numparameter.length !== 0) {
@@ -37,6 +37,33 @@ const Vendor = () => {
     // } else {
     //   setVendorsList(finvendor);
     // }
+    let ob = {};
+
+    if (certified) {
+      ob["isCertified"] = true;
+    }
+    if (star != 0) {
+      ob["rating"] = star;
+    }
+
+    console.log(ob);
+    try {
+      const response = await fetch("http://localhost:3000/applyfilter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(ob),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch products");
+      }
+      const data = await response.json();
+      setVendorsList(data);
+    } catch (err) {
+      // setError(err.message);
+    }
   };
 
   const fillme = (email) => {

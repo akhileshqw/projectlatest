@@ -107,6 +107,9 @@ app.post("/createaccount", async (req, res) => {
   }
 
   //  code for encryption
+  let milk = false;
+  let curd = false;
+  let ghee = false;
   try {
     const createUser = await RegisterModel.create({
       firstname,
@@ -120,6 +123,9 @@ app.post("/createaccount", async (req, res) => {
       work,
       rating,
       isCertified: iscertified,
+      milk: milk,
+      curd: curd,
+      ghee: ghee,
     });
 
     const userObj = {
@@ -444,20 +450,6 @@ app.post("/updateVendor", async (req, res) => {
     activate,
     host,
   } = req.body;
-  if (activate != undefined && activate == true) {
-    try {
-      const result = await RegisterModel.updateOne(
-        { email: host },
-        {
-          $set: {
-            vendorEmail: vendorEmail,
-            address: vendorLocation,
-            phone: phone,
-          },
-        }
-      );
-    } catch (error) {}
-  }
 
   let cowMilkPrice = dairyProducts[0].price;
   let cowMilkSells = dairyProducts[0].sells;
@@ -477,6 +469,44 @@ app.post("/updateVendor", async (req, res) => {
   let cowCurdSells = dairyProducts[7].sells;
   let buffaloCurdPrice = dairyProducts[8].price;
   let buffaloCurdSells = dairyProducts[8].sells;
+
+  let milk = false;
+  let curd = false;
+  let ghee = false;
+  if (
+    cowMilkSells ||
+    buffaloMilkSells ||
+    camelMilkSells ||
+    donkeyMilkSells ||
+    goatMilkSells
+  ) {
+    milk = true;
+  }
+  if (cowGheeSells || buffaloGheeSells) {
+    ghee = true;
+  }
+  if (cowCurdSells || buffaloCurdSells) {
+    curd = true;
+  }
+  console.log("host", host);
+  // if (activate != undefined && activate == true) {
+  try {
+    const result = await RegisterModel.updateOne(
+      { email: host },
+      {
+        $set: {
+          vendorEmail: vendorEmail,
+          address: vendorLocation,
+          phone: phone,
+          milk: milk,
+          curd: curd,
+          ghee: ghee,
+        },
+      }
+    );
+  } catch (error) {}
+  // }
+
   try {
     // Update logic using your database (e.g., MongoDB)
     const result = await manageProductsModal.findByIdAndUpdate(
@@ -515,6 +545,23 @@ app.post("/updateVendor", async (req, res) => {
 
 app.get("/vendorProductDetails", async (req, res) => {
   const vendorsData = await manageProductsModal.find();
+  res.send(vendorsData);
+});
+
+app.post("/applyfilter", async (req, res) => {
+  const { rating, isCertified } = req.body;
+  let vendorsData;
+  if (isCertified == undefined)
+    vendorsData = await RegisterModel.find({
+      rating: { $gte: rating },
+      isCertified: false,
+    });
+  else
+    vendorsData = await RegisterModel.find({
+      rating: { $gte: rating },
+      isCertified: isCertified,
+    });
+  vendorsData.sort((a, b) => b.rating - a.rating);
   res.send(vendorsData);
 });
 

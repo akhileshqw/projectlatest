@@ -145,6 +145,7 @@ const Manage = () => {
     async function rep() {
       console.log("in rep", vendorDetails);
       const updatedData = {
+        host: LoginUser.email,
         _id: products._id,
         vendorEmail: vendorDetails.vendorEmail,
         vendorLocation: vendorDetails.vendorLocation,
@@ -255,6 +256,7 @@ const Manage = () => {
     const updatedData = {
       _id: products._id, // Use the product's _id to identify which record to update
       vendorEmail: vendorDetails.vendorEmail,
+      host: LoginUser.email,
       vendorLocation: vendorDetails.vendorLocation,
       phone: vendorDetails.phone,
       dairyProducts: updatedProducts.map((product) => ({
