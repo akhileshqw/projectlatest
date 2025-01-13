@@ -164,41 +164,25 @@ const Vendor = () => {
                 <input
                   type="checkbox"
                   onChange={(e) => handleFilterSelection(e.target.value)}
-                  value="milk wholesale"
+                  value="Milk"
                 />{" "}
-                Milk Wholesale
+                Milk
               </label>
               <label>
                 <input
                   type="checkbox"
                   onChange={(e) => handleFilterSelection(e.target.value)}
-                  value="Organic Milk"
+                  value="Curd"
                 />{" "}
-                Organic Milk
+                Curd
               </label>
               <label>
                 <input
                   type="checkbox"
                   onChange={(e) => handleFilterSelection(e.target.value)}
-                  value="Fresh Cow Milk and Curd"
+                  value="Ghee"
                 />{" "}
-                Fresh Cow Milk and Curd
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={(e) => handleFilterSelection(e.target.value)}
-                  value="Butter and Cream"
-                />{" "}
-                Butter and Cream
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={(e) => handleFilterSelection(e.target.value)}
-                  value="any type of animal milk"
-                />{" "}
-                Any Type of Animal Milk
+                Ghee
               </label>
 
               <h5>Certification</h5>
@@ -241,8 +225,16 @@ const Vendor = () => {
                     <img src="user.jpg" alt="Vendor Profile" />
                   </div>
                   <div className="vendor-details">
-                    <div className="vendor-name">
-                      {vendor.firstname + " " + vendor.lastname}
+                    <div className="vendor-name d-flex">
+                      {vendor.firstname + " " + vendor.lastname}{" "}
+                      {vendor.isCertified && (
+                        <img
+                          src="/certified.png"
+                          alt=""
+                          height={18}
+                          width={18}
+                        />
+                      )}
                     </div>
                     <div className="rating">{renderStars(vendor.rating)}</div>
                     <div className="vendor-info">
