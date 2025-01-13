@@ -10,100 +10,96 @@ const Vendor = () => {
   const navigate = useNavigate();
   const [strparameter, setparameters] = useState([]);
   const [numparameter, setnumparameter] = useState([]);
-
+  const [fullvendorData, setFullVendorData] = useState([]);
+  const [star, setStar] = useState(1);
+  const [certified, setCertified] = useState(false);
   const { LoginUser } = useContext(userContext);
 
-  const filtermain = (v) => {
-    //     if(finvendor.length!==0){
-    //      const  sp=finvendor.filter((vendor) => vendor.rating >= v)
-    //      console.log(sp.length)
-    //      sp.sort((v1,v2)=>v2.rating-v1.rating)
-    //      setVendorsList(sp)
+  const applyFilters = () => {
+    // let np = [];
+    // let strp = [];
+    // if (numparameter.length !== 0) {
+    //   np = finvendor.filter((vendor) => vendor.rating >= numparameter[0]);
+    //   np.sort((a, b) => b.rating - a.rating);
     // }
-    if (typeof v == "number") {
-      // setnumparameter([]);
-      let tz = [];
-      tz.push(v);
-      // numparameter.push(v);
-      setnumparameter(tz);
+    // if (strparameter.length !== 0 && numparameter.length !== 0) {
+    //   for (const element of np) {
+    //     if (strparameter.includes(element.work)) {
+    //       strp.push(element);
+    //     }
+    //   }
+    //   setVendorsList(strp);
+    // } else if (strparameter.length === 0 && numparameter.length > 0) {
+    //   setVendorsList(np);
+    // } else if (strparameter.length > 0 && numparameter.length === 0) {
+    //   const tt = finvendor.filter((element) => strparameter.includes(element.work));
+    //   setVendorsList(tt);
+    // } else {
+    //   setVendorsList(finvendor);
+    // }
+  };
+
+  const fillme = (email) => {
+    // const obj=
+    for (let index = 0; index < fullvendorData.length; index++) {
+      const element = fullvendorData[index];
+      const vemail = element.vendorEmail + "";
+      // console.log(typeof vemail)
+      if (vemail == email) {
+        return fillcategories(element);
+      }
+    }
+  };
+  const fillcategories = (profile) => {
+    let arr = [];
+    if (profile.cowMilkSells) arr.push("Cow Milk");
+    if (profile.buffaloMilkSells) arr.push("Buffalo Milk");
+    if (profile.camelMilkSells) arr.push("Camel Milk");
+    if (profile.donkeyMilkSells) arr.push("Donkey Milk");
+    if (profile.goatMilkSells) arr.push("Goat Milk");
+    if (profile.cowGheeSells) arr.push("Cow Ghee");
+    if (profile.buffaloGheeSells) arr.push("Buffalo Ghee");
+    if (profile.cowCurdSells) arr.push("Cow Curd");
+    if (profile.buffaloCurdSells) arr.push("Buffalo Curd");
+
+    let str = arr.join(", ");
+    return str;
+  };
+
+  const handleFilterSelection = (v) => {
+    if (typeof v === "number") {
+      setnumparameter([v]);
     } else {
-      console.log("in str para");
-      if (strparameter.indexOf(v) == -1) {
-        // strparameter.push(v);
-        let tz = [];
-        for (let index = 0; index < strparameter.length; index++) {
-          const element = strparameter[index];
-          tz.push(element);
-        }
-        tz.push(v);
-        setparameters(tz);
-      } else {
-        let tz = [];
-        strparameter.splice(strparameter.indexOf(v), 1);
-        for (let index = 0; index < strparameter.length; index++) {
-          const element = strparameter[index];
-          tz.push(element);
-        }
-        setparameters(tz);
-      }
-      // let tz=strparameter.filter(a=>a!=v)
+      const updatedStrParams = strparameter.includes(v)
+        ? strparameter.filter((item) => item !== v)
+        : [...strparameter, v];
+      setparameters(updatedStrParams);
     }
-    console.log(numparameter);
-    console.log(strparameter);
-
-    let np = [];
-    let strp = [];
-
-    if (numparameter.length != 0) {
-      np = finvendor.filter((vendor) => vendor.rating >= numparameter[0]);
-      np.sort((a, b) => b.rating - a.rating);
-    }
-
-    if (strparameter.length != 0 && numparameter.length != 0) {
-      for (let index = 0; index < np.length; index++) {
-        const element =np[index];
-        if (strparameter.includes(element.work)) {
-          strp.push(element);
-        }
-      }
-      setVendorsList(strp);
-      console.log("both ");
-    } else if (strparameter.length == 0 && numparameter.length > 0) {
-      setVendorsList(np);
-      console.log("only num");
-    } else if (strparameter.length > 0 && numparameter.length == 0) {
-      let tt = [];
-      for (let index = 0; index < finvendor.length; index++) {
-        const element = finvendor[index];
-        if (strparameter.includes(element.work)) {
-          tt.push(element);
-        }
-      }
-      console.log("only str");
-      console.log(tt);
-      setVendorsList(tt);
-    } else {
-      setVendorsList(finvendor);
-      console.log("none");
-    }
-    console.log("len:", vendorsList.length);
   };
 
   const getVendors = async () => {
     const data = await fetch("http://localhost:3000/vendors");
     const vendorsData = await data.json();
-    console.log(vendorsData);
     setVendorsList(vendorsData);
     setfinvendor(vendorsData);
   };
+  const getVendorProductDetails = async () => {
+    const data = await fetch("http://localhost:3000/vendorProductDetails");
+    const fullVendorData = await data.json();
+    setFullVendorData(fullVendorData);
+  };
   useEffect(() => {
     getVendors();
+    getVendorProductDetails();
   }, []);
+
+  console.log("in uses effect", fullvendorData);
+  console.log("in partial", vendorsList);
   const renderStars = (num) => {
     return Array.from({ length: num }, (_, index) => (
       <span style={{ fontSize: 30 }} key={index}>
         &#9733;
-      </span> // Unicode for star
+      </span>
     ));
   };
 
@@ -122,9 +118,6 @@ const Vendor = () => {
               gap: 20,
               height: "100vh",
               overflow: "auto",
-
-              // Ensure full viewport height
-              // Prevent scroll on parent
             }}
           >
             {/* Filter Section */}
@@ -135,296 +128,141 @@ const Vendor = () => {
                 borderRadius: 8,
                 boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
                 width: 250,
-                position: "sticky", // Make the sidebar sticky
-                top: "20px", // Offset from the top of the viewport
+                position: "sticky",
+                top: "20px",
                 alignSelf: "flex-start",
               }}
               className="filter-section sticky-sidebar"
             >
-              <h3 style={{ color: "#333" }}>Filter Vendors</h3>
+              <h4 style={{ color: "#333" }}>Filter Vendors</h4>
               {/* Filter by Rating */}
-              <h4>Rating</h4>
+              <h5>Rating</h5>
               <label>
-                <input
-                  type="radio"
-                  name="rating"
-                  defaultValue={5}
-                  onChange={() => filtermain(5)}
-                />{" "}
+                <input type="radio" name="rating" onChange={() => setStar(5)} />{" "}
                 5 Stars
               </label>
               <label>
-                <input
-                  type="radio"
-                  name="rating"
-                  defaultValue={4}
-                  onChange={() => filtermain(4)}
-                />{" "}
+                <input type="radio" name="rating" onChange={() => setStar(4)} />{" "}
                 4 Stars &amp; Up
               </label>
               <label>
-                <input
-                  type="radio"
-                  name="rating"
-                  defaultValue={3}
-                  onChange={() => filtermain(3)}
-                />{" "}
+                <input type="radio" name="rating" onChange={() => setStar(3)} />{" "}
                 3 Stars &amp; Up
               </label>
               <label>
-                <input
-                  type="radio"
-                  name="rating"
-                  defaultValue={2}
-                  onChange={() => filtermain(2)}
-                />{" "}
+                <input type="radio" name="rating" onChange={() => setStar(2)} />{" "}
                 2 Stars &amp; Up
               </label>
               <label>
-                <input
-                  type="radio"
-                  name="rating"
-                  defaultValue={1}
-                  onChange={() => filtermain(1)}
-                />{" "}
+                <input type="radio" name="rating" onChange={() => setStar(1)} />{" "}
                 1 Star &amp; Up
               </label>
-              {/* Filter by Cost */}
-              <h4>Cost</h4>
-              <label>
-                <input
-                  type="checkbox"
-                  name="cost"
-                  defaultValue="low"
-                  onclick="filterVendors()"
-                />{" "}
-                Low
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="cost"
-                  defaultValue="medium"
-                  onclick="filterVendors()"
-                />{" "}
-                Medium
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="cost"
-                  defaultValue="average"
-                  onclick="filterVendors()"
-                />{" "}
-                Average
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="cost"
-                  defaultValue="high"
-                  onclick="filterVendors()"
-                />{" "}
-                High
-              </label>
-              {/* Filter by Place */}
-              <h4>Place</h4>
-              <label>
-                <input
-                  type="checkbox"
-                  name="place"
-                  defaultValue="springfield"
-                  onclick="filterVendors()"
-                />{" "}
-                Springfield
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="place"
-                  defaultValue="green-valley"
-                  onclick="filterVendors()"
-                />{" "}
-                Green Valley
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="place"
-                  defaultValue="downtown"
-                  onclick="filterVendors()"
-                />{" "}
-                Downtown
-              </label>
+
               {/* Filter by Products Sold */}
-              <h4>Products Sold</h4>
+              <h5>Products Sold</h5>
               <label>
                 <input
                   type="checkbox"
-                  name="products"
-                  defaultValue="milk wholesale"
-                  onChange={(e) => {
-                    filtermain(e.target.value);
-                  }}
+                  onChange={(e) => handleFilterSelection(e.target.value)}
+                  value="milk wholesale"
                 />{" "}
-                milk wholesale{" "}
+                Milk Wholesale
               </label>
               <label>
                 <input
                   type="checkbox"
-                  name="products"
-                  defaultValue="Organic Milk"
-                  onChange={(e) => {
-                    filtermain(e.target.value);
-                  }}
+                  onChange={(e) => handleFilterSelection(e.target.value)}
+                  value="Organic Milk"
                 />{" "}
-                Organic Milk{" "}
+                Organic Milk
               </label>
               <label>
                 <input
                   type="checkbox"
-                  name="products"
-                  defaultValue="Fresh Cow Milk and Curd"
-                  onChange={(e) => {
-                    filtermain(e.target.value);
-                  }}
+                  onChange={(e) => handleFilterSelection(e.target.value)}
+                  value="Fresh Cow Milk and Curd"
                 />{" "}
                 Fresh Cow Milk and Curd
               </label>
               <label>
                 <input
                   type="checkbox"
-                  name="products"
-                  defaultValue="Butter and Cream"
-                  onChange={(e) => {
-                    filtermain(e.target.value);
-                  }}
+                  onChange={(e) => handleFilterSelection(e.target.value)}
+                  value="Butter and Cream"
                 />{" "}
                 Butter and Cream
               </label>
               <label>
                 <input
                   type="checkbox"
-                  name="products"
-                  defaultValue="any type of animal milk"
-                  onChange={(e) => {
-                    filtermain(e.target.value);
-                  }}
+                  onChange={(e) => handleFilterSelection(e.target.value)}
+                  value="any type of animal milk"
                 />{" "}
-                any type of animal milk
+                Any Type of Animal Milk
               </label>
+
+              <h5>Certification</h5>
+              <label>
+                <input
+                  type="checkbox"
+                  onChange={() => setCertified((prev) => !prev)}
+                />{" "}
+                Certified Vendors Only
+              </label>
+
+              <button
+                onClick={applyFilters}
+                style={{
+                  marginTop: "15px",
+                  padding: "10px 20px",
+                  backgroundColor: "#007BFF",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 5,
+                  cursor: "pointer",
+                }}
+              >
+                Apply Filters
+              </button>
             </div>
+
             {/* Vendor List Section */}
             <div
               className="vendor-list"
-              id="vendorList"
-              style={{ overflow: "auto" }}
+              style={{ overflow: "auto", width: "100%" }}
             >
-              {/* Vendor Card 1 */}
-
-              {vendorsList.map((vendor) => {
-                return (
-                  <div
-                    className="vendor-card"
-                    data-rating={vendor.rating}
-                    data-cost={vendor.cost}
-                    data-place={vendor.place}
-                    data-products={vendor.products}
-                  >
-                    <div className="vendor-profile">
-                      <img src="user.jpg" alt="Vendor Profile" />
+              {vendorsList.map((vendor, index) => (
+                <div
+                  key={index}
+                  className="vendor-card"
+                  data-rating={vendor.rating}
+                >
+                  <div className="vendor-profile">
+                    <img src="user.jpg" alt="Vendor Profile" />
+                  </div>
+                  <div className="vendor-details">
+                    <div className="vendor-name">
+                      {vendor.firstname + " " + vendor.lastname}
                     </div>
-                    <div className="vendor-details">
-                      <div className="vendor-name">
-                        {vendor.firstname + " " + vendor.lastname}
-                      </div>
-                      {/* based on the number i want the no of stars give me the codee */}
-
-                      {/* generate a random no between in the range 1-5 */}
-
-                      <div className="rating">{renderStars(vendor.rating)}</div>
-                      <div className="vendor-info">
-                        <strong>Products Sold:</strong> {vendor.work}
-                      </div>
-
-                      <div className="location">
-                        <strong>Location:</strong> {vendor.address}
-                      </div>
-                      <div className="phone">
-                        <strong>Phone:</strong>{" "}
-                        <a href={`tel:+91${vendor.phone}`}>
-                          +91 {vendor.phone}
-                        </a>
-                      </div>
+                    <div className="rating">{renderStars(vendor.rating)}</div>
+                    <div className="vendor-info">
+                      {/* have to work */}
+                      <strong>Products Sold:</strong> {fillme(vendor.email)}
+                    </div>
+                    <div className="location">
+                      <strong>Location:</strong> {vendor.address}
+                    </div>
+                    <div className="phone">
+                      <strong>Phone:</strong>{" "}
+                      <a href={`tel:+91${vendor.phone}`}>+91 {vendor.phone}</a>
                     </div>
                   </div>
-                );
-              })}
-              {/* <div
-                className="vendor-card"
-                data-rating={5}
-                data-cost="low"
-                data-place="springfield"
-                data-products="fruits,vegetables,dairy"
-              >
-                <div className="vendor-profile">
-                  <img src="user.jpg" alt="Vendor Profile" />
                 </div>
-                <div className="vendor-details">
-                  <div className="vendor-name">John's Organic Store</div>
-                  <div className="rating">⭐⭐⭐⭐⭐</div>
-                  <div className="vendor-info">
-                    <strong>Products Sold:</strong> Organic Fruits, Vegetables,
-                    Dairy
-                  </div>
-
-                  <div className="location">
-                    <strong>Location:</strong> Springfield
-                  </div>
-                  <div className="phone">
-                    <strong>Phone:</strong>{" "}
-                    <a href="tel:+911234567890">+91 12345 67890</a>
-                  </div>
-                </div>
-              </div> */}
-              {/* Vendor Card 2 */}
-              {/* <div
-                            className="vendor-card"
-                            data-rating={4}
-                            data-cost="medium"
-                            data-place="green-valley"
-                            data-products="vegetables,dairy"
-                        >
-                            <div className="vendor-profile">
-                                <img src="user.jpg" alt="Vendor Profile" />
-                            </div>
-                            <div className="vendor-details">
-                                <div className="vendor-name">
-                                    Green Valley Farmers
-                                </div>
-                                <div className="rating">⭐⭐⭐⭐</div>
-                                <div className="vendor-info">
-                                    <strong>Products Sold:</strong> Fresh
-                                    Vegetables, Dairy
-                                </div>
-                                <div className="price">
-                                    <strong>Cost per Packet:</strong> Medium
-                                </div>
-                                <div className="location">
-                                    <strong>Location:</strong> Green Valley
-                                </div>
-                                <div className="phone">
-                                    <strong>Phone:</strong>{" "}
-                                    <a href="tel:+911234567890">
-                                        +91 12345 67890
-                                    </a>
-                                </div>
-                            </div>
-                        </div> */}
+              ))}
             </div>
           </div>
         ) : (
-          <div>kindly login to view vendor profiles</div>
+          <div>Kindly login to view vendor profiles</div>
         )}
       </>
     </div>

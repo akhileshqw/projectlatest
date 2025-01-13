@@ -513,6 +513,11 @@ app.post("/updateVendor", async (req, res) => {
   }
 });
 
+app.get("/vendorProductDetails", async (req, res) => {
+  const vendorsData = await manageProductsModal.find();
+  res.send(vendorsData);
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

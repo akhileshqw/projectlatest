@@ -109,7 +109,7 @@ const RatingList = () => {
                       borderBottom: "2px solid #f1f1f1",
                       cursor: "pointer",
                     }}
-                    onClick={() => openImageViewer(rating.imageUrl)}  
+                    onClick={() => openImageViewer(rating.imageUrl)}
                   />
                 )}
 
