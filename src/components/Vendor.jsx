@@ -8,8 +8,7 @@ const Vendor = () => {
   const [vendorsList, setVendorsList] = useState([]);
   const [finvendor, setfinvendor] = useState([]);
   const navigate = useNavigate();
-  const [strparameter, setparameters] = useState([]);
-  const [numparameter, setnumparameter] = useState([]);
+  const [dairySection, setDairySection] = useState([]);
   const [fullvendorData, setFullVendorData] = useState([]);
   const [star, setStar] = useState(1);
   const [certified, setCertified] = useState(false);
@@ -44,6 +43,12 @@ const Vendor = () => {
     }
     if (star != 0) {
       ob["rating"] = star;
+    }
+    if (dairySection.length !== 0) {
+      for (let index = 0; index < dairySection.length; index++) {
+        const element = dairySection[index];
+        ob[element] = true;
+      }
     }
 
     console.log(ob);
@@ -94,14 +99,24 @@ const Vendor = () => {
   };
 
   const handleFilterSelection = (v) => {
-    if (typeof v === "number") {
-      setnumparameter([v]);
-    } else {
-      const updatedStrParams = strparameter.includes(v)
-        ? strparameter.filter((item) => item !== v)
-        : [...strparameter, v];
-      setparameters(updatedStrParams);
-    }
+    //   if (typeof v === "number") {
+    //     setnumparameter([v]);
+    //   } else {
+    //     const updatedStrParams = strparameter.includes(v)
+    //       ? strparameter.filter((item) => item !== v)
+    //       : [...strparameter, v];
+    //     setparameters(updatedStrParams);
+    //   }
+
+    setDairySection((prev) => {
+      let newSection = [...prev];
+      if (newSection.indexOf(v) != -1) {
+        newSection.splice(newSection.indexOf(v), 1);
+      } else {
+        newSection.push(v);
+      }
+      return newSection;
+    });
   };
 
   const getVendors = async () => {
@@ -191,7 +206,7 @@ const Vendor = () => {
                 <input
                   type="checkbox"
                   onChange={(e) => handleFilterSelection(e.target.value)}
-                  value="Milk"
+                  value="milk"
                 />{" "}
                 Milk
               </label>
@@ -199,7 +214,7 @@ const Vendor = () => {
                 <input
                   type="checkbox"
                   onChange={(e) => handleFilterSelection(e.target.value)}
-                  value="Curd"
+                  value="curd"
                 />{" "}
                 Curd
               </label>
@@ -207,7 +222,7 @@ const Vendor = () => {
                 <input
                   type="checkbox"
                   onChange={(e) => handleFilterSelection(e.target.value)}
-                  value="Ghee"
+                  value="ghee"
                 />{" "}
                 Ghee
               </label>
@@ -242,6 +257,26 @@ const Vendor = () => {
               className="vendor-list"
               style={{ overflow: "auto", width: "100%" }}
             >
+              {vendorsList.length == 0 && (
+                <div
+                  style={{
+                    textAlign: "center",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: 400,
+                  }}
+                >
+                  <img
+                    src="https://askg.vercel.app/img/no-results.png"
+                    alt=""
+                    width={100}
+                    height={100}
+                  />
+                  <div>No Results found...</div>{" "}
+                </div>
+              )}
               {vendorsList.map((vendor, index) => (
                 <div
                   key={index}

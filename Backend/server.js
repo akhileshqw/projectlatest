@@ -549,18 +549,29 @@ app.get("/vendorProductDetails", async (req, res) => {
 });
 
 app.post("/applyfilter", async (req, res) => {
-  const { rating, isCertified } = req.body;
-  let vendorsData;
-  if (isCertified == undefined)
-    vendorsData = await RegisterModel.find({
-      rating: { $gte: rating },
-      isCertified: false,
-    });
-  else
-    vendorsData = await RegisterModel.find({
-      rating: { $gte: rating },
-      isCertified: isCertified,
-    });
+  let { rating, isCertified, milk, curd, ghee } = req.body;
+
+  let query = {};
+
+  if (rating !== undefined) {
+    query.rating = { $gte: rating };
+  }
+  if (isCertified !== undefined) {
+    query.isCertified = isCertified;
+  }
+  if (milk !== undefined) {
+    query.milk = milk;
+  }
+  if (curd !== undefined) {
+    query.curd = curd;
+  }
+  if (ghee !== undefined) {
+    query.ghee = ghee;
+  }
+
+  let vendorsData = await RegisterModel.find(query);
+
+  console.log("vd", vendorsData.length);
   vendorsData.sort((a, b) => b.rating - a.rating);
   res.send(vendorsData);
 });
