@@ -571,9 +571,15 @@ app.post("/applyfilter", async (req, res) => {
 
   let vendorsData = await RegisterModel.find(query);
 
-  console.log("vd", vendorsData.length);
+  // console.log("vd", vendorsData.length);
   vendorsData.sort((a, b) => b.rating - a.rating);
   res.send(vendorsData);
+});
+
+app.post("/getnormalinfo", async (req, res) => {
+  const { givenby } = req.body;
+  const vendorData = await RegisterModel.find({ email: givenby });
+  res.send(vendorData);
 });
 
 app.listen(port, () => {

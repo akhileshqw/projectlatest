@@ -144,6 +144,15 @@ const Vendor = () => {
       </span>
     ));
   };
+const gotovendor =(email)=>{
+
+navigate(`/aboutvendor?vendoremail=${encodeURIComponent(email)}`);
+// navigate(`/nextpage?username=${encodeURIComponent(username)}&rating=${rating}`);
+
+
+}
+
+
 
   return (
     <div style={{ overflow: "hidden" }}>
@@ -279,9 +288,11 @@ const Vendor = () => {
               )}
               {vendorsList.map((vendor, index) => (
                 <div
+                style={{cursor:"pointer"}}
                   key={index}
                   className="vendor-card"
                   data-rating={vendor.rating}
+                  onClick={()=>gotovendor(vendor.email)}
                 >
                   <div className="vendor-profile">
                     <img src="user.jpg" alt="Vendor Profile" />
