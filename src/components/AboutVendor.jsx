@@ -1,14 +1,187 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { MdOutlineMail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoLocationOutline } from "react-icons/io5";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import "leaflet-routing-machine";
+
 const AboutVendor = () => {
   const [searchParams] = useSearchParams();
   const [email, setEmail] = useState(searchParams.get("vendoremail"));
   const [vendorDiaryData, setVendorDiaryData] = useState(null);
   const [vendorProfileData, setVendorProfileData] = useState(null);
   const [tableData, setTableData] = useState(null);
+
+  // const MapWithRoute = ( vendor, user ) => {
+  //   useEffect(() => {
+  //     // Initialize the map
+  //     const map = L.map("map").setView([vendor.address.lat, vendor.address.lng], 13);
+
+  //     // Add the OpenStreetMap tile layer
+  //     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  //       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  //     }).addTo(map);
+
+  //     // Initialize routing control but don't display it
+  //     const routingControl = L.Routing.control({
+  //       waypoints: [
+  //         L.latLng(vendor.address.lat, vendor.address.lng),
+  //         L.latLng(user.address.lat, user.address.lng),
+  //       ],
+  //       routeWhileDragging: false, // Disable dragging
+  //       show: false, // Hide the routing panel
+  //       createMarker: () => null, // Disable waypoint markers
+  //     });
+
+  //     // Listen for the 'routesfound' event and add the route manually
+  //     routingControl.on("routesfound", (e) => {
+  //       // Clear existing routes (to ensure we don't have multiple overlapping routes)
+  //       map.eachLayer((layer) => {
+  //         if (layer instanceof L.Polyline) {
+  //           map.removeLayer(layer); // Remove previous polyline (if any)
+  //         }
+  //       });
+
+  //       const route = e.routes[0];
+  //       const routePolyline = L.polyline(route.coordinates, { color: "blue", weight: 5 }).addTo(map); // Add new route
+
+  //       // Adjust map bounds to fit the new route
+  //       map.fitBounds(routePolyline.getBounds());
+  //     });
+
+  //     // Trigger the route calculation without displaying UI
+  //     routingControl.route();
+
+  //     // Cleanup on unmount or vendor/user changes
+  //     return () => {
+  //       routingControl.remove(); // Remove the routing control
+  //       map.eachLayer((layer) => {
+  //         if (layer instanceof L.Polyline) {
+  //           map.removeLayer(layer); // Ensure no routes are left
+  //         }
+  //       });
+  //       map.remove(); // Clean up map instance
+  //     };
+  //   }, [vendor, user]);
+
+  //   return <div id="map" style={{ height: "400px", width: "100%" }}></div>;
+  // };
+
+  const initializeMapWithRoute = (vendor, user) => {
+    // Create the map instance and set the initial view
+    const map = L.map("map").setView(
+      [vendor.address.lat, vendor.address.lng],
+      13
+    );
+
+    // Add OpenStreetMap tile layer to the map
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    // Create and add marker for vendor
+    const vendorMarker = L.marker([
+      vendor.address.lat,
+      vendor.address.lng,
+    ]).addTo(map);
+    vendorMarker.bindPopup("<b>Vendor Location</b>").openPopup();
+
+    // Create and add marker for user
+    const userMarker = L.marker([user.address.lat, user.address.lng]).addTo(
+      map
+    );
+    userMarker.bindPopup("<b>User Location</b>").openPopup();
+
+    // Initialize routing control
+    const routingControl = L.Routing.control({
+      waypoints: [
+        L.latLng(vendor.address.lat, vendor.address.lng),
+        L.latLng(user.address.lat, user.address.lng),
+      ],
+      routeWhileDragging: false, // Disable dragging of route
+      show: false, // Hide the routing panel
+      createMarker: () => null, // Disable waypoint markers
+    });
+
+    // Listen for the 'routesfound' event and manually add the route
+    routingControl.on("routesfound", (e) => {
+      // Clear any existing route if present
+      map.eachLayer((layer) => {
+        if (layer instanceof L.Polyline) {
+          map.removeLayer(layer);
+        }
+      });
+
+      const route = e.routes[0];
+      const routePolyline = L.polyline(route.coordinates, {
+        color: "blue",
+        weight: 5,
+      }).addTo(map); // Add the new route
+
+      // Adjust map bounds to fit the route
+      map.fitBounds(routePolyline.getBounds());
+
+      // Calculate the midpoint of the route
+      const routeCoordinates = route.coordinates;
+      const midpointIndex = Math.floor(routeCoordinates.length / 2); // Get the middle point of the route
+      const midpoint = routeCoordinates[midpointIndex];
+
+      // Add popup at the midpoint of the route
+      const distance = vendorLatLng.distanceTo(userLatLng); // Distance in meters
+      const distanceInKm = (distance / 1000).toFixed(2); // Convert meters to kilometers
+      const distancePopupText = `Shortest Distance: ${distanceInKm} km`;
+
+      const midpointPopup = L.popup({
+        closeButton: true,
+        autoClose: false,
+        closeOnClick: false,
+      })
+        .setLatLng(midpoint) // Position the popup at the midpoint
+        .setContent(distancePopupText)
+        .openOn(map);
+    });
+
+    // Trigger the route calculation without showing the UI
+    routingControl.route();
+
+    // Calculate the shortest distance between vendor and user
+    const vendorLatLng = L.latLng(vendor.address.lat, vendor.address.lng);
+    const userLatLng = L.latLng(user.address.lat, user.address.lng);
+
+    const distance = vendorLatLng.distanceTo(userLatLng); // Distance in meters
+    console.log("Shortest Distance:", distance);
+
+    // Return the map instance in case you need to cleanup or interact with it later
+    return map;
+  };
+
+  const AboutVendor = () => {
+    const vendor = {
+      address: { lat: 12.9716, lng: 77.5946 }, // Vendor's address
+    };
+
+    const user = {
+      address: { lat: 13.0827, lng: 80.2707 }, // User's address
+    };
+
+    useEffect(() => {
+      // Call the function to initialize the map and add the route
+      const map = initializeMapWithRoute(vendor, user);
+
+      // Cleanup when component unmounts
+      return () => {
+        if (map) {
+          map.remove(); // Clean up the map instance
+        }
+      };
+    }, [vendor, user]);
+
+    return <div id="map" style={{ height: "400px", width: "100%" }}></div>;
+  };
 
   const groupProducts = (category) =>
     tableData.dairyProducts
@@ -20,6 +193,7 @@ const AboutVendor = () => {
           ? product.name.includes("Ghee")
           : product.name.includes("Curd")
       );
+
   useEffect(() => {
     const fetchDiaryData = async () => {
       const give = {
@@ -40,9 +214,10 @@ const AboutVendor = () => {
         const data = await response.json();
         setVendorDiaryData(data);
       } catch (err) {
-        setError(err.message);
+        console.error(err.message);
       }
     };
+
     const fetchProfileData = async () => {
       const give = {
         givenby: email,
@@ -57,21 +232,21 @@ const AboutVendor = () => {
           body: JSON.stringify(give),
         });
         if (!response.ok) {
-          throw new Error("Failed to fetch ratings");
+          throw new Error("Failed to fetch profile data");
         }
         const data = await response.json();
         setVendorProfileData(data[0]);
       } catch (err) {
-        setError(err.message);
+        console.error(err.message);
       }
     };
+
     fetchDiaryData();
     fetchProfileData();
   }, [email]);
 
   useEffect(() => {
     if (vendorDiaryData) {
-      console.log("in use effect", vendorDiaryData[0]);
       setTableData({
         dairyProducts:
           [
@@ -134,34 +309,31 @@ const AboutVendor = () => {
     }
   }, [vendorDiaryData]);
 
-  let vendor;
-  if (vendorProfileData == null) {
-    vendor = {
-      name: "Vendor Name",
-      certified: true,
-      rating: 4.5,
-      email: "vendor@example.com",
-      phone: "+1234567890",
-      location: "Vendor Address, City, Country",
+  let vendor = {
+    name: "Vendor Name",
+    certified: true,
+    rating: 4.5,
+    email: "vendor@example.com",
+    phone: "+1234567890",
+    location: "Vendor Address, City, Country",
+    address: {
+      lat: 12.9716,
+      lng: 77.5946,
+    },
+    userAddress: {
+      lat: 13.0827,
+      lng: 80.2707,
+    },
+  };
 
-      address: {
-        lat: 12.9716,
-        lng: 77.5946,
-      },
-      userAddress: {
-        lat: 13.0827,
-        lng: 80.2707,
-      },
-    };
-  } else {
+  if (vendorProfileData) {
     vendor = {
-      name: vendorProfileData.firstname + " " + vendorProfileData.lastname,
+      name: `${vendorProfileData.firstname} ${vendorProfileData.lastname}`,
       certified: vendorProfileData.isCertified,
       rating: vendorProfileData.rating,
       email: vendorProfileData.email,
       phone: vendorProfileData.phone,
       location: vendorProfileData.address,
-
       address: {
         lat: 12.9716,
         lng: 77.5946,
@@ -172,6 +344,7 @@ const AboutVendor = () => {
       },
     };
   }
+
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 0; i < 5; i++) {
@@ -183,9 +356,28 @@ const AboutVendor = () => {
     }
     return stars;
   };
-  console.log("td", tableData);
-  console.log("vdd", vendorDiaryData);
-  console.log("vpd", vendorProfileData);
+
+  // const mapRef = useRef(null);
+
+  // useEffect(() => {
+  //   if (mapRef.current) {
+  //     L.Routing.control({
+  //       waypoints: [
+  //         L.latLng(vendor.address.lat, vendor.address.lng),
+  //         L.latLng(vendor.userAddress.lat, vendor.userAddress.lng),
+  //       ],
+
+  //       routeWhileDragging: true,
+  //       show:true,
+  //       createMarker: () => null,
+  //       addWaypoints: true,
+  //       lineOptions: {
+  //         styles: [{ color: "#007BFF", weight: 5 }],
+  //       },
+  //     }).addTo(mapRef.current);
+  //   }
+  // }, [vendor]);
+
   return (
     <div
       style={{
@@ -205,7 +397,6 @@ const AboutVendor = () => {
           maxWidth: "900px",
         }}
       >
-        {/* Vendor Name and Certification */}
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
           <h1>{vendor.name}</h1>
           <p style={{ fontStyle: "italic", color: "#333", fontSize: "20px" }}>
@@ -213,7 +404,6 @@ const AboutVendor = () => {
           </p>
         </div>
 
-        {/* Vendor Rating */}
         <div
           style={{
             textAlign: "center",
@@ -225,7 +415,6 @@ const AboutVendor = () => {
           <p>{vendor.rating} out of 5</p>
         </div>
 
-        {/* Contact Details */}
         <div style={{ marginBottom: "30px", fontSize: "1.2rem" }}>
           <h3>Contact Details</h3>
           <p
@@ -263,19 +452,22 @@ const AboutVendor = () => {
           </p>
         </div>
 
-        {/* Map View */}
         <div style={{ marginBottom: "30px" }}>
-          <h3>Vendor Address</h3>
-          <iframe
-            width="100%"
-            height="400"
-            src={`https://www.google.com/maps?q=${vendor.address.lat},${vendor.address.lng}&output=embed`}
-            title="Vendor Location"
-            style={{ width: "100%", border: "none" }}
-          />
+          <h3>Location</h3>
+          {/* <MapContainer
+            center={[vendor.address.lat, vendor.address.lng]}
+            zoom={8}
+            style={{ height: "400px", width: "100%" }}
+            ref={mapRef}
+          >
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <Marker position={[vendor.address.lat, vendor.address.lng]} />
+            <Marker
+              position={[vendor.userAddress.lat, vendor.userAddress.lng]}
+            />
+          </MapContainer> */}
+          {AboutVendor()}
         </div>
-
-        {/* Dairy Stats */}
         {["Milk", "Ghee", "Curd"].map((category) => (
           <div key={category} className="mb-4">
             <h4
