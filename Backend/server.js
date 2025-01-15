@@ -51,6 +51,8 @@ app.post("/createaccount", async (req, res) => {
     isVendor,
     work,
     rating,
+    lat,
+    lng,
   } = req.body;
 
   let vendorEmail = email;
@@ -126,6 +128,8 @@ app.post("/createaccount", async (req, res) => {
       milk: milk,
       curd: curd,
       ghee: ghee,
+      lat,
+      lng,
     });
 
     const userObj = {
@@ -133,6 +137,8 @@ app.post("/createaccount", async (req, res) => {
       email: email,
       isVendor: isVendor,
       isCertified: iscertified,
+      lat:lat,
+      lng:lng,
     };
     // console.log("before jwt");
     jwt.sign(
@@ -231,6 +237,8 @@ app.post("/login-vendor", async (req, res) => {
     username: findUser.firstname + " " + findUser.lastname,
     isVendor: findUser.isVendor,
     isCertified: findUser.isCertified,
+    lat:findUser.lat,
+    lng:findUser.lng,
   };
   if (findUser.password === password) {
     jwt.sign(
@@ -278,6 +286,8 @@ app.post("/login", async (req, res) => {
     email: email,
     username: findUser.firstname + " " + findUser.lastname,
     isVendor: findUser.isVendor,
+    lat:findUser.lat,
+    lng:findUser.lng,
   };
   if (findUser.password === password) {
     jwt.sign(

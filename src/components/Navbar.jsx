@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { userContext } from "../context/userContext";
 import Skeleton from "react-loading-skeleton";
 import { UserCircleIcon } from "lucide-react";
@@ -26,6 +26,11 @@ const Navbar = () => {
   }, []);
 
   console.log("navbar component", LoginUser);
+
+  const isProductsActive =
+    location.pathname === "/milk" ||
+    location.pathname === "/ghee" ||
+    location.pathname === "/curd";
 
   return (
     <>
@@ -72,34 +77,64 @@ const Navbar = () => {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className="nav-link active" aria-current="page" to="/">
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive ? "nav-link active" : "nav-link"
+                  }
+                  aria-current="page"
+                  to="/"
+                >
                   Home
-                </Link>
+                </NavLink>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/about">
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive ? "nav-link active" : "nav-link"
+                  }
+                  to="/about"
+                >
                   About
-                </Link>
+                </NavLink>
               </li>
               <li className="nav-item dropdown">
-                <Link
-                  id="wnat"
-                  className="nav-link dropdown-toggle"
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive && isProductsActive
+                      ? "nav-link active dropdown-toggle"
+                      : "nav-link dropdown-toggle"
+                  }
                   to="#"
                   role="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
                   Products
-                </Link>
+                </NavLink>
                 <ul id="why" className="dropdown-menu">
                   <li>
-                    <Link className="dropdown-item" to="/milk">
+                    <Link
+                      className="dropdown-item"
+                      to="/milk"
+                      onClick={(e) => {
+                        e.target
+                          .closest(".dropdown-menu")
+                          .classList.remove("show");
+                      }}
+                    >
                       Milk
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="/ghee">
+                    <Link
+                      className="dropdown-item"
+                      to="/ghee"
+                      onClick={(e) => {
+                        e.target
+                          .closest(".dropdown-menu")
+                          .classList.remove("show");
+                      }}
+                    >
                       Ghee
                     </Link>
                   </li>
@@ -107,16 +142,29 @@ const Navbar = () => {
                     <hr className="dropdown-divider" />
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="/curd">
+                    <Link
+                      className="dropdown-item"
+                      to="/curd"
+                      onClick={(e) => {
+                        e.target
+                          .closest(".dropdown-menu")
+                          .classList.remove("show");
+                      }}
+                    >
                       Curd
                     </Link>
                   </li>
                 </ul>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/contact">
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive ? "nav-link active" : "nav-link"
+                  }
+                  to="/contact"
+                >
                   Contact Us
-                </Link>
+                </NavLink>
               </li>
             </ul>
 
@@ -265,16 +313,9 @@ const Navbar = () => {
                       className="btn btn-danger"
                       data-bs-toggle="modal"
                       data-bs-target="#signupModal"
+                      onClick={() => navigate("/register")}
                     >
-                      <Link
-                        to={"/register"}
-                        style={{
-                          textDecoration: "none",
-                          color: "white",
-                        }}
-                      >
-                        SignUp
-                      </Link>
+                      Sign Up
                     </div>
                   </div>
                 )}

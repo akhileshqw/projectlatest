@@ -5,7 +5,7 @@ const AboutUs = () => {
     return (
         <>
             <div className="z">
-                <span className="my-span">Our Story</span>
+                <span className="my-span" style={{fontSize:"50px",textAlign:"center"}}>Our Story</span>
                 <img src="./background.jpg" alt="" height="360px" className="title"/>
             </div>
             <h1 className="zxc">Welcome to Milk on the Way</h1>

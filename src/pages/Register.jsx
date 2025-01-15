@@ -1,16 +1,26 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { userContext } from "../context/userContext";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import {   useNavigate } from "react-router-dom";
+
 
 const Register = () => {
+  const [spinner,setSpinner]=useState(false);
+  const [stopSpinner,setStopSpinner]=useState(false);
   const [isVendor, SetIsVendor] = useState(false);
+    const navigate = useNavigate();
+
   const [resMessage, setresMessage] = useState({});
   const [visible, setVisible] = useState(false);
   const { setLoginUser } = useContext(userContext);
+  const [lat,setLat]=useState(0);
+  const [long,setLong]=useState(0);
+  const genAI = new GoogleGenerativeAI("AIzaSyAAyyoBmFXaa-KH1gSTR5CPrYWpHAHOJFQ");
 
   const {
     register,
@@ -20,18 +30,81 @@ const Register = () => {
     formState: { errors, isSubmitting, isSubmitSuccessful, isSubmitted },
   } = useForm();
   const accountCreated = () => {
-    alert("Account Created Successfully...");
+
+    
+  alert("Account Created Successfully...");
+  navigate("/");
+  
+
+    
   };
   const failed = () => {
+    setSpinner((prev)=>!prev)
+
     alert("Failed to create an account...");
   };
 
+  async function giveCoordinates(location) {
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+  
+    const prompt = `What are the latitude and longitude coordinates for the location: ${location}? If the location cannot be found, provide the coordinates of the nearest identifiable location. Ensure accuracy and clarity in your response.`;
+  
+    try {
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = await response.text();
+  
+      
+      const regex = /([\d.-]+)°/g;
+    
+      const matches = [...text.matchAll(regex)];
+      
+      if (matches.length === 2) {
+        const latitude = parseFloat(matches[0][1]);
+        const longitude = parseFloat(matches[1][1]);
+        
+        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+      let ob=[]
+      ob.push(latitude)
+      ob.push(longitude)
+      return ob
+      } else {
+        console.error("Could not extract coordinates from the response.");
+      }
+      
+    } catch (error) {
+      console.error(" parsing response:", error);
+      throw new Error("Failed to retrieve coordinates");
+    }
+  }
+  useEffect(() => {
+    if (lat !== 0 && long !== 0) {
+      console.log("Coordinates updated:", lat, long);
+    }
+  }, [lat, long]);
+
+
+
+
+
   const onSubmit = async (data) => {
     // Always include rating, default to null if not a vendor
-    data.rating = isVendor ? 0 : null;
+    setSpinner(true)
+    data.rating = isVendor ? 1 : null;
 
-    console.log("Data to be sent:", data); // Debug log
-
+    // console.log("Data to be address:", data.address); // Debug log
+   let ob= await giveCoordinates(data.address)
+    
+      
+   
+    
+     
+    
+if(ob!=undefined){
+  data.lat=ob[0]
+    data.lng=ob[1]
+    
+    console.log("Data to be sent:", data);
     try {
       let response = await fetch("http://localhost:3000/createaccount", {
         method: "POST",
@@ -44,8 +117,10 @@ const Register = () => {
       });
       let content = await response.json();
       console.log("Server response:", content);
-
+      // setSpinner((prev)=>!prev)
+      setStopSpinner(true)
       setresMessage(content);
+      setSpinner(false)
 
       if (content.success) {
         accountCreated();
@@ -57,7 +132,10 @@ const Register = () => {
       console.error("Error during API request:", error);
       failed();
     }
-
+  }else{
+    alert("failed to fetch location try again later ...")
+  }
+ 
     SetIsVendor(false);
   };
 
@@ -65,7 +143,8 @@ const Register = () => {
     <>
       {resMessage.success ? (
         <>
-          <Navigate to={"/"} />
+          {/* <Navigate to={"/"} /> */}
+          {setSpinner(false)}
         </>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -337,13 +416,16 @@ const Register = () => {
                   </div>
                 )}
                 <fieldset className="row mb-3"></fieldset>
-
+                <div className="btn btn-primary" style={{width:"125px",height:"42px",display:"flex",alignItems:"center",justifyContent:"center"}}>
                 <input
                   className="butt btn btn-primary"
                   style={{ margin: "inherit" }}
                   type="submit"
-                  defaultValue="Sign In"
+                  defaultValue="Submit"
                 />
+              { ( spinner && !stopSpinner)&&  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>} 
+                </div>
+               
                 <div
                   className="container mb-4 d-flex"
                   style={{ justifyContent: "space-between" }}

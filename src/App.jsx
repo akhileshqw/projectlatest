@@ -250,7 +250,7 @@ function App() {
                 animationName: "fadeInUp",
               }}
             >
-              <Link to="#" target="_blank">
+              <Link to="#" >
                 <img src="https://www.heritagefoods.in/static/images/fb.png" />
               </Link>
             </li>
@@ -265,7 +265,7 @@ function App() {
                 animationName: "fadeInUp",
               }}
             >
-              <Link to="#" target="_blank">
+              <Link to="#" >
                 <img src="https://www.heritagefoods.in/static/images/tw.png" />
               </Link>
             </li>
@@ -280,7 +280,7 @@ function App() {
                 animationName: "fadeInUp",
               }}
             >
-              <Link to="#" target="_blank">
+              <Link to="#">
                 <img src="https://www.heritagefoods.in/static/images/lk.png" />
               </Link>
             </li>
@@ -295,7 +295,7 @@ function App() {
                 animationName: "fadeInUp",
               }}
             >
-              <Link to="#" target="_blank">
+              <Link to="#">
                 <img src="https://www.heritagefoods.in/static/images/is.png" />
               </Link>
             </li>
@@ -310,7 +310,7 @@ function App() {
                 animationName: "fadeInUp",
               }}
             >
-              <Link to="#" target="_blank">
+              <Link to="#" >
                 <img src="https://www.heritagefoods.in/static/images/yt.png" />
               </Link>
             </li>
@@ -324,8 +324,7 @@ function App() {
             Designed by{" "}
             <Link
               style={{ fontSize: 20 }}
-              to="https://www.pixel-studios.com/"
-              target="_blank"
+              to="#"
             >
               abcd
             </Link>

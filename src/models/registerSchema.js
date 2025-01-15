@@ -14,5 +14,10 @@ const registerSchema = new mongoose.Schema({
   milk: { type: Boolean, default: false },
   curd: { type: Boolean, default: false },
   ghee: { type: Boolean, default: false },
+  lat: { type: Number },
+  lng: { type: Number },
+
+  
+
 });
 export const RegisterModel = mongoose.model("register", registerSchema);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { useSearchParams } from "react-router-dom";
 import { MdOutlineMail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
@@ -7,11 +7,14 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import "leaflet-routing-machine";
+import { userContext } from "../context/userContext";
 
 const AboutVendor = () => {
   const [searchParams] = useSearchParams();
   const [email, setEmail] = useState(searchParams.get("vendoremail"));
   const [vendorDiaryData, setVendorDiaryData] = useState(null);
+    const { LoginUser } = useContext(userContext);
+  
   const [vendorProfileData, setVendorProfileData] = useState(null);
   const [tableData, setTableData] = useState(null);
 
@@ -189,6 +192,8 @@ const AboutVendor = () => {
     fetchDiaryData();
     fetchProfileData();
   }, [email]);
+  console.log(vendorProfileData)
+console.log(vendorDiaryData)
 
   useEffect(() => {
     if (vendorDiaryData) {
@@ -266,12 +271,12 @@ const AboutVendor = () => {
       lng: "77.5946",
     },
     userAddress: {
-      lat: "13.0827N",
-      lng: "87.2707E",
+      lat: "13.0827",
+      lng: "87.2707",
     },
   };
 
-  if (vendorProfileData) {
+  if (vendorProfileData && !!LoginUser) {
     vendor = {
       name: `${vendorProfileData.firstname} ${vendorProfileData.lastname}`,
       certified: vendorProfileData.isCertified,
@@ -280,12 +285,12 @@ const AboutVendor = () => {
       phone: vendorProfileData.phone,
       location: vendorProfileData.address,
       address: {
-        lat: "12.9716" ,
-        lng: "77.5946",
+        lat: vendorProfileData.lat ,
+        lng: vendorProfileData.lng,
       },
       userAddress: {
-        lat: "23.0827",
-        lng: "87.2707",
+        lat: LoginUser.lat,
+        lng: LoginUser.lng,
       },
     };
   }
