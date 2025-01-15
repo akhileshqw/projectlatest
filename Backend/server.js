@@ -21,6 +21,7 @@ dotenv.config({
 // console.log(process.env.EMAIL_PASS);
 const jwtSecret = "lasd4831231#^";
 
+  console.log("after check")
 // db connection
 mongoose.connect("mongodb://127.0.0.1:27017/milkontheway");
 app.use(express.json({ limit: "50mb" }));
@@ -348,7 +349,8 @@ app.get("/vendors", async (req, res) => {
 
 app.post("/contact", async (req, res) => {
   const { email, query, concern } = req.body;
-  console.log(process.env.EMAIL_PASS);
+  console.log("in route");
+
   // Create a transporter object using SMTP with your email host details
   let transporter = nodemailer.createTransport({
     service: "gmail", // You can also use other email services like Outlook, Yahoo, etc.
@@ -380,6 +382,9 @@ app.post("/contact", async (req, res) => {
     res.status(200).send({ success: true, msg: "Email sent successfully" });
   });
 });
+
+
+
 
 app.get("/logout", (req, res) => {
   res.clearCookie("token").send("Logged out");

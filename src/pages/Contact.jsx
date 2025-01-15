@@ -26,7 +26,6 @@ const Contact = () => {
     notify("Email not sent");
   }
   const onSubmit = async (data) => {
-    reset();
     console.log(data);
     let response = await fetch("http://localhost:3000/contact", {
       method: "POST",
@@ -39,6 +38,7 @@ const Contact = () => {
     });
     let content = await response.json();
     if (content.success) {
+      reset();
       emailSent();
     } else {
       failed();

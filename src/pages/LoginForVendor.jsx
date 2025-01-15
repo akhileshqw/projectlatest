@@ -24,6 +24,13 @@ const LoginForVendor = () => {
     formState: { errors, isSubmitting, isSubmitSuccessful, isSubmitted },
   } = useForm();
 
+   const notifyAndRedirect = (msg, redirectPath) => {
+      // Show the toast and use the onClose callback for navigation
+      toast(msg, {
+        position: "top-center",
+        onClose: () => navigate(redirectPath), // Navigate after toast is closed
+      });
+    };
   const accountCreated = () => {
     // alert("Login Successful...");
     notify("Login Successful...");
@@ -45,42 +52,31 @@ const LoginForVendor = () => {
       body: JSON.stringify(data),
     });
     let content = await response.json();
-    console.log("in the cone");
-    console.log(content);
+    // console.log("in the cone");
+    // console.log(content);
     setresMessage(content);
     if (content.success) {
-      accountCreated();
-
+      // accountCreated();
       setLoginUser(content.user);
+      notifyAndRedirect("Login Successful...", "/");
     } else {
-      failed(content.msg);
+      // failed(content.msg);
+      notify(content.msg);
+
       resetField("password")
     }
   };
-  const callon=()=>{
-    const timer = setTimeout(() => {
-      // setToastOpen(false);  // Hide the toast
-      navigate("/"); // Redirect to a new page
-    }, 5000);
-
-  }
+   
 
   return (
     <>
-      {resMessage.success ? (
-        <>
-          {/* <Navigate to={"/"} />
-           */}
-           {callon()}
-        <ToastContainer position="top-center" transition={Bounce} />
-
-        </>
-      ) : (
+    
         <div
           className="container d-flex justify-content-center align-items-center"
           style={{ minHeight: "80vh" }}
         >
-          <div className="row w-100">
+         <ToastContainer position="top-center" transition={Bounce} />
+          <div className="row w-100 d-flex flex-column-reverse flex-md-row">
             {/* Login Form (Left Side) */}
             <div
               className="col-12 col-md-5 p-4 shadow rounded"
@@ -204,7 +200,7 @@ const LoginForVendor = () => {
             </div>
           </div>
         </div>
-      )}
+      
     </>
   );
 };
