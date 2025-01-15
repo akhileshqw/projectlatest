@@ -2,15 +2,26 @@ import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/milkpage.css";
 import { userContext } from "../context/userContext";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+
 export default function FreshMilkPage() {
   const { LoginUser } = useContext(userContext);
-  const navigate = useNavigate();
+    const navigate = useNavigate();
+  
+  
+  const notifyAndRedirect = (msg, redirectPath) => {
+    // Show the toast and use the onClose callback for navigation
+    toast(msg, {
+      position: "top-center",
+      onClose: () => navigate(redirectPath), // Navigate after toast is closed
+    });
+  };
+
   const tovendor = () => {
     if (!!LoginUser) {
       navigate("/vendor");
     } else {
-      alert("you need to login");
-      navigate("/login-customer");
+      notifyAndRedirect("You need to login first", "/login-customer");
     }
   };
 
@@ -19,6 +30,7 @@ export default function FreshMilkPage() {
       <center>
         <h3>From Cow to Camel: Discover Unique Animal Milks</h3>
       </center>
+      <ToastContainer position="top-center" transition={Bounce} />
       <div className="container d-flex gap-4 flex-wrap">
         <div className="card">
           <img src="./cow456.jpeg.jpg" alt="Coconut and Milk Image" />

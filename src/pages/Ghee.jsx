@@ -4,19 +4,22 @@ import { Link, useNavigate } from "react-router-dom";
 import "../styles/milkpage.css";
 import { userContext } from "../context/userContext";
 export default function Ghee() {
-  const notify = (msg) =>
+    const { LoginUser } = useContext(userContext);
+    const navigate = useNavigate();
+  
+  const notifyAndRedirect = (msg, redirectPath) => {
+    // Show the toast and use the onClose callback for navigation
     toast(msg, {
       position: "top-center",
+      onClose: () => navigate(redirectPath), // Navigate after toast is closed
     });
-  const { LoginUser } = useContext(userContext);
-  const navigate = useNavigate();
+  };
+
   const tovendor = () => {
     if (!!LoginUser) {
       navigate("/vendor");
     } else {
-      alert("you need to login");
-      // notify("you need to login");
-      navigate("/login-customer");
+      notifyAndRedirect("You need to login first", "/login-customer");
     }
   };
 

@@ -4,19 +4,24 @@ import "../styles/milkpage.css";
 import { userContext } from "../context/userContext";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 export default function Curd() {
-  const notify = (msg) =>
-    toast(msg, {
-      position: "top-center",
-    });
+   
   const { LoginUser } = useContext(userContext);
   const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const notifyAndRedirect = (msg, redirectPath) => {
+    // Show the toast and use the onClose callback for navigation
+    
+    toast(msg, {
+      position: "top-center",
+      onClose: () => navigate(redirectPath), // Navigate after toast is closed
+    });
+  };
+
   const tovendor = () => {
     if (!!LoginUser) {
       navigate("/vendor");
     } else {
-      alert("you need to login");
-      // notify("you need to login");
-      navigate("/login-customer");
+      notifyAndRedirect("You need to login first", "/login-customer");
     }
   };
   return (

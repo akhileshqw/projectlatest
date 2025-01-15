@@ -19,7 +19,7 @@ const Contact = () => {
   } = useForm();
   function emailSent() {
     // alert("Your query has been submitted successfully");
-    notify("Your query has been submitted successfully")
+    notify("Your query has been submitted successfully");
   }
   function failed() {
     // alert("Email not sent");
@@ -57,7 +57,7 @@ const Contact = () => {
         gap: 20,
       }}
     >
-    <ToastContainer position="top-center" transition={Bounce} />
+      <ToastContainer position="top-center" transition={Bounce} />
       <div className="container my-4">
         <h2>Contact Us</h2>
         <div className="mb-3">
