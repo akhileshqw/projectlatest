@@ -1,11 +1,15 @@
 import React from "react";
 import { useState } from "react";
-
+import { Bounce, ToastContainer, toast } from "react-toastify";
 const Form = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [course, setCourse] = useState("");
+    const notify = (msg) =>
+        toast(msg, {
+          position: "top-center",
+        });
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -21,10 +25,12 @@ const Form = () => {
         setEmail("");
         setPhone("");
         setCourse("");
-        alert("Registration Successful!");
+        // alert("Registration Successful!");
+        notify("Registration Successful!");
     };
     return (
         <div>
+        <ToastContainer position="top-center" transition={Bounce} />
             <h1 className="text-2xl font-bold text-center">
                 Registration Form
             </h1>

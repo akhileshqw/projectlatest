@@ -1,8 +1,13 @@
 import React, { useContext } from "react";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/milkpage.css";
 import { userContext } from "../context/userContext";
 export default function Ghee() {
+  const notify = (msg) =>
+    toast(msg, {
+      position: "top-center",
+    });
   const { LoginUser } = useContext(userContext);
   const navigate = useNavigate();
   const tovendor = () => {
@@ -10,6 +15,7 @@ export default function Ghee() {
       navigate("/vendor");
     } else {
       alert("you need to login");
+      // notify("you need to login");
       navigate("/login-customer");
     }
   };
@@ -19,6 +25,7 @@ export default function Ghee() {
       <center>
         <h3>From Cow to Camel: Discover Unique Animal ghees</h3>
       </center>
+      <ToastContainer position="top-center" transition={Bounce} />
       <div className="container d-flex gap-4 flex-wrap">
         <div className="card">
           <img src="./cow456.jpeg.jpg" alt="Coconut and ghee Image" />

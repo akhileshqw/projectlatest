@@ -8,8 +8,8 @@ const Manage = () => {
   const [showSaveButton, setShowSaveButton] = useState(false);
   const { LoginUser } = useContext(userContext);
   const [products, setProducts] = useState(null);
-  const notify = () =>
-    toast("please re-login for better experience", {
+  const notify = (msg) =>
+    toast(msg, {
       position: "top-center",
     });
   const [vendorDetails, setVendorDetails] = useState({
@@ -177,13 +177,15 @@ const Manage = () => {
         // Handle successful update (e.g., show a success message)
       } catch (err) {
         console.error("Error updating vendor details:", err);
-        alert("There was an error updating the details.");
+        // alert("There was an error updating the details.");
+        notify("There was an error updating the details.")
       }
     }
 
     if (editing?.key === "dairyProductPrice") {
       if (isNaN(parseFloat(editedValue))) {
-        alert("Invalid price value. Please enter a valid number.");
+        // alert("Invalid price value. Please enter a valid number.");
+        notify("Invalid price value. Please enter a valid number.");
         return;
       }
       const updatedProducts = [...vendorDetails.dairyProducts];
@@ -233,9 +235,10 @@ const Manage = () => {
         setVendorDetails(updatedVendorDetails);
       } catch (err) {
         console.error("Error updating vendor details:", err);
-        alert("There was an error updating the details.");
+        // alert("There was an error updating the details.");
+        notify("There was an error updating the details.");
       }
-      if (editing.key === "vendorEmail" || editing.key === "phone") notify();
+      if (editing.key === "vendorEmail" || editing.key === "phone") notify("please re-login for better experience...");
     }
     setEditing(null);
     setShowSaveButton(false);
@@ -286,7 +289,8 @@ const Manage = () => {
       // Optionally display a success message
     } catch (err) {
       console.error(err);
-      alert("There was an error updating the sells status.");
+      // alert("There was an error updating the sells status.");
+      notify("There was an error updating the details.")
     }
   };
 

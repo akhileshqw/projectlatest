@@ -1,8 +1,12 @@
 import React, { useState } from "react";
-
+import { Bounce, ToastContainer, toast } from "react-toastify";
 const BecomeCertifiedVendor = () => {
   const [imageUrl, setImageUrl] = useState();
 
+  const notify = (msg) =>
+    toast(msg, {
+      position: "top-center",
+    });
   const handleImageUpload = (event) => {
     console.log("in method want");
 
@@ -81,9 +85,12 @@ const BecomeCertifiedVendor = () => {
       console.log("Server response:", content);
 
       if (content.success) {
-        alert(content.msg);
+        // alert(content.msg);
+        notify(content.msg)
       } else {
-        alert("Application failed to submit");
+        // alert("Application failed to submit");
+        notify("Application failed to submit");
+
       }
     } catch (error) {
       console.error("Error during API request:", error);
@@ -103,6 +110,7 @@ const BecomeCertifiedVendor = () => {
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
       }}
     >
+    <ToastContainer position="top-center" transition={Bounce} />
       <h2
         className="text-center mb-4"
         style={{ fontWeight: "bold", color: "#333" }}

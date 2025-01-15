@@ -2,7 +2,12 @@ import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/milkpage.css";
 import { userContext } from "../context/userContext";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 export default function Curd() {
+  const notify = (msg) =>
+    toast(msg, {
+      position: "top-center",
+    });
   const { LoginUser } = useContext(userContext);
   const navigate = useNavigate();
   const tovendor = () => {
@@ -10,6 +15,7 @@ export default function Curd() {
       navigate("/vendor");
     } else {
       alert("you need to login");
+      // notify("you need to login");
       navigate("/login-customer");
     }
   };
@@ -18,6 +24,7 @@ export default function Curd() {
       <center>
         <h3>From Cow to Camel: Discover Unique Animal curds</h3>
       </center>
+      <ToastContainer position="top-center" transition={Bounce} />
       <div className="container d-flex gap-4 flex-wrap">
         <div className="card">
           <img src="./cow456.jpeg.jpg" alt="Coconut and curd Image" />

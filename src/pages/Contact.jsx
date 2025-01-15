@@ -2,8 +2,13 @@ import React from "react";
 import "../styles/footer.css";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 
 const Contact = () => {
+  const notify = (msg) =>
+    toast(msg, {
+      position: "top-center",
+    });
   const [resMessage, setresMessage] = useState({});
   const {
     register,
@@ -13,10 +18,12 @@ const Contact = () => {
     formState: { errors, isSubmitting, isSubmitSuccessful, isSubmitted },
   } = useForm();
   function emailSent() {
-    alert("Your query has been submitted successfully");
+    // alert("Your query has been submitted successfully");
+    notify("Your query has been submitted successfully")
   }
   function failed() {
-    alert("Email not sent");
+    // alert("Email not sent");
+    notify("Email not sent");
   }
   const onSubmit = async (data) => {
     reset();
@@ -50,6 +57,7 @@ const Contact = () => {
         gap: 20,
       }}
     >
+    <ToastContainer position="top-center" transition={Bounce} />
       <div className="container my-4">
         <h2>Contact Us</h2>
         <div className="mb-3">

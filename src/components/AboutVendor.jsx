@@ -15,65 +15,10 @@ const AboutVendor = () => {
   const [vendorProfileData, setVendorProfileData] = useState(null);
   const [tableData, setTableData] = useState(null);
 
-  // const MapWithRoute = ( vendor, user ) => {
-  //   useEffect(() => {
-  //     // Initialize the map
-  //     const map = L.map("map").setView([vendor.address.lat, vendor.address.lng], 13);
-
-  //     // Add the OpenStreetMap tile layer
-  //     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  //       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  //     }).addTo(map);
-
-  //     // Initialize routing control but don't display it
-  //     const routingControl = L.Routing.control({
-  //       waypoints: [
-  //         L.latLng(vendor.address.lat, vendor.address.lng),
-  //         L.latLng(user.address.lat, user.address.lng),
-  //       ],
-  //       routeWhileDragging: false, // Disable dragging
-  //       show: false, // Hide the routing panel
-  //       createMarker: () => null, // Disable waypoint markers
-  //     });
-
-  //     // Listen for the 'routesfound' event and add the route manually
-  //     routingControl.on("routesfound", (e) => {
-  //       // Clear existing routes (to ensure we don't have multiple overlapping routes)
-  //       map.eachLayer((layer) => {
-  //         if (layer instanceof L.Polyline) {
-  //           map.removeLayer(layer); // Remove previous polyline (if any)
-  //         }
-  //       });
-
-  //       const route = e.routes[0];
-  //       const routePolyline = L.polyline(route.coordinates, { color: "blue", weight: 5 }).addTo(map); // Add new route
-
-  //       // Adjust map bounds to fit the new route
-  //       map.fitBounds(routePolyline.getBounds());
-  //     });
-
-  //     // Trigger the route calculation without displaying UI
-  //     routingControl.route();
-
-  //     // Cleanup on unmount or vendor/user changes
-  //     return () => {
-  //       routingControl.remove(); // Remove the routing control
-  //       map.eachLayer((layer) => {
-  //         if (layer instanceof L.Polyline) {
-  //           map.removeLayer(layer); // Ensure no routes are left
-  //         }
-  //       });
-  //       map.remove(); // Clean up map instance
-  //     };
-  //   }, [vendor, user]);
-
-  //   return <div id="map" style={{ height: "400px", width: "100%" }}></div>;
-  // };
-
   const initializeMapWithRoute = (vendor, user) => {
     // Create the map instance and set the initial view
     const map = L.map("map").setView(
-      [vendor.address.lat, vendor.address.lng],
+      [vendor.lat, user.lng],
       13
     );
 
@@ -85,13 +30,13 @@ const AboutVendor = () => {
 
     // Create and add marker for vendor
     const vendorMarker = L.marker([
-      vendor.address.lat,
-      vendor.address.lng,
+      vendor.lat,
+      vendor.lng,
     ]).addTo(map);
     vendorMarker.bindPopup("<b>Vendor Location</b>").openPopup();
 
     // Create and add marker for user
-    const userMarker = L.marker([user.address.lat, user.address.lng]).addTo(
+    const userMarker = L.marker([user.lat, user.lng]).addTo(
       map
     );
     userMarker.bindPopup("<b>User Location</b>").openPopup();
@@ -99,8 +44,8 @@ const AboutVendor = () => {
     // Initialize routing control
     const routingControl = L.Routing.control({
       waypoints: [
-        L.latLng(vendor.address.lat, vendor.address.lng),
-        L.latLng(user.address.lat, user.address.lng),
+        L.latLng(vendor.lat, vendor.lng),
+        L.latLng(user.lat, user.lng),
       ],
       routeWhileDragging: false, // Disable dragging of route
       show: false, // Hide the routing panel
@@ -149,8 +94,8 @@ const AboutVendor = () => {
     routingControl.route();
 
     // Calculate the shortest distance between vendor and user
-    const vendorLatLng = L.latLng(vendor.address.lat, vendor.address.lng);
-    const userLatLng = L.latLng(user.address.lat, user.address.lng);
+    const vendorLatLng = L.latLng(vendor.lat, vendor.lng);
+    const userLatLng = L.latLng(user.lat, user.lng);
 
     const distance = vendorLatLng.distanceTo(userLatLng); // Distance in meters
     console.log("Shortest Distance:", distance);
@@ -159,14 +104,14 @@ const AboutVendor = () => {
     return map;
   };
 
-  const AboutVendor = () => {
-    const vendor = {
-      address: { lat: 12.9716, lng: 77.5946 }, // Vendor's address
-    };
+  const AboutVendor = (vendor,user) => {
+    // const vendor = {
+    //   address: { lat: 12.9716, lng: 77.5946 }, // Vendor's address
+    // };
 
-    const user = {
-      address: { lat: 13.0827, lng: 80.2707 }, // User's address
-    };
+    // const user = {
+    //   address: { lat: 13.0827, lng: 83.2707 }, // User's address
+    // };
 
     useEffect(() => {
       // Call the function to initialize the map and add the route
@@ -317,12 +262,12 @@ const AboutVendor = () => {
     phone: "+1234567890",
     location: "Vendor Address, City, Country",
     address: {
-      lat: 12.9716,
-      lng: 77.5946,
+      lat: "12.9716",
+      lng: "77.5946",
     },
     userAddress: {
-      lat: 13.0827,
-      lng: 80.2707,
+      lat: "13.0827N",
+      lng: "87.2707E",
     },
   };
 
@@ -335,12 +280,12 @@ const AboutVendor = () => {
       phone: vendorProfileData.phone,
       location: vendorProfileData.address,
       address: {
-        lat: 12.9716,
-        lng: 77.5946,
+        lat: "12.9716" ,
+        lng: "77.5946",
       },
       userAddress: {
-        lat: 13.0827,
-        lng: 80.2707,
+        lat: "23.0827",
+        lng: "87.2707",
       },
     };
   }
@@ -356,27 +301,6 @@ const AboutVendor = () => {
     }
     return stars;
   };
-
-  // const mapRef = useRef(null);
-
-  // useEffect(() => {
-  //   if (mapRef.current) {
-  //     L.Routing.control({
-  //       waypoints: [
-  //         L.latLng(vendor.address.lat, vendor.address.lng),
-  //         L.latLng(vendor.userAddress.lat, vendor.userAddress.lng),
-  //       ],
-
-  //       routeWhileDragging: true,
-  //       show:true,
-  //       createMarker: () => null,
-  //       addWaypoints: true,
-  //       lineOptions: {
-  //         styles: [{ color: "#007BFF", weight: 5 }],
-  //       },
-  //     }).addTo(mapRef.current);
-  //   }
-  // }, [vendor]);
 
   return (
     <div
@@ -454,19 +378,7 @@ const AboutVendor = () => {
 
         <div style={{ marginBottom: "30px" }}>
           <h3>Location</h3>
-          {/* <MapContainer
-            center={[vendor.address.lat, vendor.address.lng]}
-            zoom={8}
-            style={{ height: "400px", width: "100%" }}
-            ref={mapRef}
-          >
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <Marker position={[vendor.address.lat, vendor.address.lng]} />
-            <Marker
-              position={[vendor.userAddress.lat, vendor.userAddress.lng]}
-            />
-          </MapContainer> */}
-          {AboutVendor()}
+          {AboutVendor(vendor.address,vendor.userAddress)}
         </div>
         {["Milk", "Ghee", "Curd"].map((category) => (
           <div key={category} className="mb-4">

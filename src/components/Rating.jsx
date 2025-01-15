@@ -1,9 +1,14 @@
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { userContext } from "../context/userContext";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 // import { RegisterModel } from "../models/registerSchema";
 
 const RatingForm = () => {
+  const notify = (msg) =>
+    toast(msg, {
+      position: "top-center",
+    });
   const [rating, setRating] = useState(0); // For storing the selected rating
   const { LoginUser } = useContext(userContext);
 
@@ -69,12 +74,15 @@ const RatingForm = () => {
         // accountCreated();
         // setLoginUser(content.user);
         reset();
-        alert(content.msg);
+        // alert(content.msg);
+        notify(content.msg)
 
       } else {
         // failed();
         // console.log("failed");
-        alert(content.msg);
+        // alert(content.msg);
+        notify(content.msg)
+
       }
     } catch (error) {
       console.error("Error during API request:", error);
@@ -99,6 +107,7 @@ const RatingForm = () => {
         padding: "20px",
       }}
     >
+    <ToastContainer position="top-center" transition={Bounce} />
       <form
         onSubmit={handleSubmit(onSubmit)}
         style={{

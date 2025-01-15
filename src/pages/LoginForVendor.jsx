@@ -4,12 +4,18 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { userContext } from "../context/userContext";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 
 const LoginForVendor = () => {
   const [resMessage, setresMessage] = useState({});
   const [visible, setVisible] = useState(false);
+    const navigate = useNavigate();
+  
   const { setLoginUser } = useContext(userContext);
-
+  const notify = (msg) =>
+    toast(msg, {
+      position: "top-center",
+    });
   const {
     register,
     handleSubmit,
@@ -19,7 +25,8 @@ const LoginForVendor = () => {
   } = useForm();
 
   const accountCreated = () => {
-    alert("Login Successful...");
+    // alert("Login Successful...");
+    notify("Login Successful...");
   };
   const failed = (msg) => {
     alert(msg);
@@ -43,18 +50,30 @@ const LoginForVendor = () => {
     setresMessage(content);
     if (content.success) {
       accountCreated();
+
       setLoginUser(content.user);
     } else {
       failed(content.msg);
       resetField("password")
     }
   };
+  const callon=()=>{
+    const timer = setTimeout(() => {
+      // setToastOpen(false);  // Hide the toast
+      navigate("/"); // Redirect to a new page
+    }, 5000);
+
+  }
 
   return (
     <>
       {resMessage.success ? (
         <>
-          <Navigate to={"/"} />
+          {/* <Navigate to={"/"} />
+           */}
+           {callon()}
+        <ToastContainer position="top-center" transition={Bounce} />
+
         </>
       ) : (
         <div
