@@ -6,7 +6,6 @@ import { RatingModal } from "./models/ratingSchema.js";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 const app = express();
-const port = 3000;
 import nodemailer from "nodemailer";
 
 
@@ -19,19 +18,20 @@ dotenv.config({
   path: "./.env",
 });
 
+const port =process.env.PORT;
 // console.log(process.env.EMAIL_PASS);
 // const jwtSecret = "lasd4831231#^";
 
   // console.log("after check")
 // db connection
-mongoose.connect(
-  "mongodb+srv://akhileshchikatla6:OnZnSxTACLku2BFZ@cluster0.i9vrn.mongodb.net/milkontheway?retryWrites=true&w=majority&appName=Cluster0"
-);
+
+
+mongoose.connect(`${process.env.MONGO_STRING}`);
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: `${process.env.FRONTEND_URL}`,
     credentials: true,
   })
 );

@@ -3,10 +3,11 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.css";
 import { userContext } from "../context/userContext";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import {   useNavigate } from "react-router-dom";
+
 
 
 const Register = () => {
@@ -20,7 +21,7 @@ const Register = () => {
   const { setLoginUser } = useContext(userContext);
   const [lat,setLat]=useState(0);
   const [long,setLong]=useState(0);
-  const genAI = new GoogleGenerativeAI("AIzaSyAAyyoBmFXaa-KH1gSTR5CPrYWpHAHOJFQ");
+  const genAI = new GoogleGenerativeAI(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}`);
 
   const {
     register,
@@ -455,3 +456,4 @@ if(ob!=undefined){
 };
 
 export default Register;
+
