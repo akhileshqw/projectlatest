@@ -38,18 +38,30 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 // app.use(cors());
 
 
+// const corsOptions = {
+//   origin: `${process.env.FRONTEND_URL}`, // Frontend URL
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+//   allowedHeaders: ['Content-Type', 'Authorization'], // Custom headers
+// };
+
+// app.use(cors(corsOptions));
+
+// // Ensure preflight requests are handled
+// app.options('*', cors(corsOptions));
+
 const corsOptions = {
-  origin: `${process.env.FRONTEND_URL}`, // Frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Custom headers
+  origin: `${process.env.FRONTEND_URL}`, // Allow your frontend origin
+  credentials: true, // Allow credentials (cookies, authorization headers)
 };
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', `${process.env.FRONTEND_URL}`); // Frontend origin
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.sendStatus(200);
+});
 
 app.use(cors(corsOptions));
-
-// Ensure preflight requests are handled
-app.options('*', cors(corsOptions));
-
-
 
 
 app.use(express.json());
