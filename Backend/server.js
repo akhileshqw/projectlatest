@@ -14,6 +14,7 @@ import path from "path";
 import { certifiedVendorModal } from "./models/certifiedvendorSchema.js";
 import { manageProductsModal } from "./models/manageProductsSchema.js";
 
+
 dotenv.config({
   path: "./.env",
 });
@@ -26,7 +27,9 @@ const port =process.env.PORT;
 // db connection
 
 
-mongoose.connect(`${process.env.MONGO_STRING}`);
+mongoose.connect(`${process.env.MONGO_STRING}`,{
+  tls:true
+});
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 // app.use(
@@ -61,8 +64,15 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 //   res.sendStatus(200);
 // });
 
-// app.use(cors(corsOptions));
-app.use(cors());
+const corsOptions={
+    origin:["https://www.example.com","https://localhost:5173",process.env.FRONTEND_URL],
+    credentials:true,
+    methods:["GET","POST"]
+    
+}
+
+
+app.use(cors(corsOptions));
 
 
 app.use(express.json());
