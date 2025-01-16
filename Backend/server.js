@@ -1,29 +1,32 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import { RegisterModel } from "../src/models/registerSchema.js";
-import { RatingModal } from "../src/models/ratingSchema.js";
+import { RegisterModel } from "./models/registerSchema.js";
+import { RatingModal } from "./models/ratingSchema.js";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 const app = express();
 const port = 3000;
 import nodemailer from "nodemailer";
 
+
 import dotenv from "dotenv";
 import path from "path";
-import { certifiedVendorModal } from "../src/models/certifiedvendorSchema.js";
-import { manageProductsModal } from "../src/models/manageProductsSchema.js";
+import { certifiedVendorModal } from "./models/certifiedvendorSchema.js";
+import { manageProductsModal } from "./models/manageProductsSchema.js";
 
 dotenv.config({
-  path: "../.env",
+  path: "./.env",
 });
 
 // console.log(process.env.EMAIL_PASS);
 const jwtSecret = "lasd4831231#^";
 
-  console.log("after check")
+  // console.log("after check")
 // db connection
-mongoose.connect("mongodb://127.0.0.1:27017/milkontheway");
+mongoose.connect(
+  "mongodb+srv://akhileshchikatla6:OnZnSxTACLku2BFZ@cluster0.i9vrn.mongodb.net/milkontheway?retryWrites=true&w=majority&appName=Cluster0"
+);
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(

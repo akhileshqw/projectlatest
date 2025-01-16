@@ -65,11 +65,11 @@ const LoginForCustomer = () => {
 
   return (
     <>
+        <ToastContainer position="top-center" transition={Bounce} />
       <div
         className="container d-flex justify-content-center align-items-center"
         style={{ minHeight: "80vh" }}
       >
-        <ToastContainer position="top-center" transition={Bounce} />
         <div className="row w-100 d-flex flex-column-reverse flex-md-row">
           {/* Login Form (Left Side) */}
           <div

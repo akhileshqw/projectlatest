@@ -1,15 +1,19 @@
 import React, { useEffect } from "react";
 import "./styles/homeStyles.css";
-import { Link } from "react-router-dom";
-
+// import { Link } from "react-router-dom";
+import 'react-toastify/dist/ReactToastify.css';
 import { useState, useContext } from "react";
 import { userContext } from "./context/userContext";
 import { Trash, UserCircleIcon } from "lucide-react";
-import Skeleton from "./components/Skeleton";
-import Navbar from "./components/Navbar";
+import Skeleton from "../src/components/Skeleton";
+import Navbar from "../src/components/Navbar";
 import { set } from "mongoose";
+import { Link, useNavigate } from "react-router-dom";
+
+
 
 function App() {
+  const navigate = useNavigate();
   return (
     <>
       <div
@@ -189,15 +193,18 @@ function App() {
                   Dairy.{" "}
                 </p>
               </div>
-              <div className="col-md-6 col-md-offset-3 vm">
-                <div className="readmore-wraper text-center">
-                  <Link className="readmore-btn" to="/about" tabIndex={-1}>
+              <div
+                className="col-md-6 col-md-offset-3 vm"
+                onClick={() => navigate("/about")}
+              >
+                <div className="readmore-wraper text-center" style={{cursor:"pointer"}} onClick={()=>navigate("/about")}>
+                  <span className="readmore-btn"  tabIndex={-1}>
                     <span style={{ color: "white" }}>View More</span>
                     <span className="middlebar" />
                     <span className="readmore-arrow">
                       <i className="fa fa-angle-right" />
                     </span>
-                  </Link>
+                  </span>
                 </div>
               </div>
             </div>
@@ -250,7 +257,7 @@ function App() {
                 animationName: "fadeInUp",
               }}
             >
-              <Link to="#" >
+              <Link to="#">
                 <img src="https://www.heritagefoods.in/static/images/fb.png" />
               </Link>
             </li>
@@ -265,7 +272,7 @@ function App() {
                 animationName: "fadeInUp",
               }}
             >
-              <Link to="#" >
+              <Link to="#">
                 <img src="https://www.heritagefoods.in/static/images/tw.png" />
               </Link>
             </li>
@@ -310,7 +317,7 @@ function App() {
                 animationName: "fadeInUp",
               }}
             >
-              <Link to="#" >
+              <Link to="#">
                 <img src="https://www.heritagefoods.in/static/images/yt.png" />
               </Link>
             </li>
@@ -322,10 +329,7 @@ function App() {
           Copyright © Milk on the Way Limited.{" "}
           <span>
             Designed by{" "}
-            <Link
-              style={{ fontSize: 20 }}
-              to="#"
-            >
+            <Link style={{ fontSize: 20 }} to="#">
               abcd
             </Link>
           </span>

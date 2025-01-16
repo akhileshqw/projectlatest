@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 import { userContext } from "../context/userContext";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import {   useNavigate } from "react-router-dom";
