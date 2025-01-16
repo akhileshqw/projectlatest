@@ -35,7 +35,23 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 //     credentials: true,
 //   })
 // );
-app.use(cors());
+// app.use(cors());
+
+
+const corsOptions = {
+  origin: `${process.env.FRONTEND_URL}`, // Frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Custom headers
+};
+
+app.use(cors(corsOptions));
+
+// Ensure preflight requests are handled
+app.options('*', cors(corsOptions));
+
+
+
+
 app.use(express.json());
 app.use(cookieParser());
 
