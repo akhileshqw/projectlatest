@@ -67,7 +67,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 const corsOptions={
     origin:["https://www.example.com","https://localhost:5173",process.env.FRONTEND_URL],
     credentials:true,
-    methods:["GET","POST"]
+    methods:["GET","POST"],
     
 }
 
@@ -196,7 +196,7 @@ app.post("/createaccount", async (req, res) => {
         res
           .cookie("token", token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: "strict",
           })
           .send({
@@ -297,7 +297,7 @@ app.post("/login-vendor", async (req, res) => {
         res
           .cookie("token", token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: "strict",
           })
           .send({
@@ -311,6 +311,7 @@ app.post("/login-vendor", async (req, res) => {
     res.send({ success: false, msg: "Incorrect Password" });
   }
 });
+console.log(process.env.JWT_SECRET)
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   console.log(email, password);
@@ -334,6 +335,7 @@ app.post("/login", async (req, res) => {
     lng:findUser.lng,
   };
   if (findUser.password === password) {
+    console.log("before jwt")
     jwt.sign(
       userObj,
       process.env.JWT_SECRET,
@@ -345,7 +347,7 @@ app.post("/login", async (req, res) => {
         res
           .cookie("token", token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: "strict",
           })
           .send({
