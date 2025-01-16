@@ -196,7 +196,7 @@ app.post("/createaccount", async (req, res) => {
         res
           .cookie("token", token, {
             httpOnly: true,
-            secure: true,
+            secure: false,
             sameSite: "strict",
           })
           .send({
@@ -296,8 +296,8 @@ app.post("/login-vendor", async (req, res) => {
         if (err) throw err;
         res
           .cookie("token", token, {
-            httpOnly: true,
-            secure: true,
+            httpOnly: false,
+            secure: false,
             sameSite: "strict",
           })
           .send({
@@ -347,7 +347,7 @@ app.post("/login", async (req, res) => {
         res
           .cookie("token", token, {
             httpOnly: true,
-            secure: true,
+            secure: false,
             sameSite: "strict",
           })
           .send({
