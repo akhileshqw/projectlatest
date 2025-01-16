@@ -73,7 +73,7 @@ const BecomeCertifiedVendor = () => {
     formData.imageUrl = imageUrl;
     console.log(formData);
     try {
-      let response = await fetch("http://localhost:3000/certifyvendor", {
+      let response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/certifyvendor`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

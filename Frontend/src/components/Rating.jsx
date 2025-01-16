@@ -59,7 +59,7 @@ const RatingForm = () => {
     //   const findUser = await RegisterModel.findOne({ email });
     //down here
     try {
-      let response = await fetch("http://localhost:3000/ratings", {
+      let response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/ratings`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

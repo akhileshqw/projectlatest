@@ -53,7 +53,7 @@ const Vendor = () => {
 
     console.log(ob);
     try {
-      const response = await fetch("http://localhost:3000/applyfilter", {
+      const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/applyfilter`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -120,13 +120,13 @@ const Vendor = () => {
   };
 
   const getVendors = async () => {
-    const data = await fetch("http://localhost:3000/vendors");
+    const data = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/vendors`);
     const vendorsData = await data.json();
     setVendorsList(vendorsData);
     setfinvendor(vendorsData);
   };
   const getVendorProductDetails = async () => {
-    const data = await fetch("http://localhost:3000/vendorProductDetails");
+    const data = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/vendorProductDetails`);
     const fullVendorData = await data.json();
     setFullVendorData(fullVendorData);
   };

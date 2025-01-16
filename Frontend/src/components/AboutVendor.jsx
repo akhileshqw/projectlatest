@@ -148,7 +148,7 @@ const AboutVendor = () => {
         givenby: email,
       };
       try {
-        const response = await fetch("http://localhost:3000/getdiaryproducts", {
+        const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/getdiaryproducts`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -171,7 +171,7 @@ const AboutVendor = () => {
         givenby: email,
       };
       try {
-        const response = await fetch("http://localhost:3000/getnormalinfo", {
+        const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/getnormalinfo`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

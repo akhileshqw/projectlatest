@@ -106,7 +106,7 @@ if(ob!=undefined){
     
     console.log("Data to be sent:", data);
     try {
-      let response = await fetch("http://localhost:3000/createaccount", {
+      let response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/createaccount`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -9,7 +9,7 @@ const Navbar = () => {
   const { LoginUser } = useContext(userContext);
   const [ready, setready] = useState(false);
   const handleClick = () => {
-    fetch("http://localhost:3000/logout", {
+    fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/logout`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -26,6 +26,9 @@ const Navbar = () => {
   }, []);
 
   console.log("navbar component", LoginUser);
+  // console.log(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}`)
+  // console.log("Backend Base URL:", import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL);
+
 
   const isProductsActive =
     location.pathname === "/milk" ||

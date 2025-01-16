@@ -7,7 +7,7 @@ export function UserContextProvider({ children }) {
   const [ready, setReady] = useState(false);
 
   const fetchUser = async () => {
-    const data = await fetch("http://localhost:3000/profile", {
+    const data = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/profile`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

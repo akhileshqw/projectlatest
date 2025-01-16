@@ -27,7 +27,7 @@ const Contact = () => {
   }
   const onSubmit = async (data) => {
     console.log(data);
-    let response = await fetch("http://localhost:3000/contact", {
+    let response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/contact`, {
       method: "POST",
 
       headers: {

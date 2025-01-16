@@ -41,7 +41,7 @@ const LoginForVendor = () => {
   const onSubmit = async (data) => {
     // reset();
     console.log(data);
-    let response = await fetch("http://localhost:3000/login-vendor", {
+    let response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/login-vendor`, {
       method: "POST",
 
       headers: {

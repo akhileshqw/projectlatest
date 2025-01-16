@@ -38,7 +38,7 @@ const LoginForCustomer = () => {
   const onSubmit = async (data) => {
     // reset();
     console.log(data);
-    let response = await fetch("http://localhost:3000/login", {
+    let response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/login`, {
       method: "POST",
 
       headers: {

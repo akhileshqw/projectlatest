@@ -21,7 +21,7 @@ const RatingList = () => {
         givenby: LoginUser.email,
       };
       try {
-        const response = await fetch("http://localhost:3000/ratingsdata", {
+        const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/ratingsdata`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

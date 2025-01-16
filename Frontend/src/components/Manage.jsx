@@ -38,7 +38,7 @@ const Manage = () => {
         givenby: LoginUser.email,
       };
       try {
-        const response = await fetch("http://localhost:3000/getdiaryproducts", {
+        const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/getdiaryproducts`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -159,7 +159,7 @@ const Manage = () => {
       console.log("Updated Data:", updatedData);
 
       try {
-        const response = await fetch("http://localhost:3000/updateVendor", {
+        const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/updateVendor`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -216,7 +216,7 @@ const Manage = () => {
       console.log("Updated Data:", updatedData);
 
       try {
-        const response = await fetch("http://localhost:3000/updateVendor", {
+        const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/updateVendor`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -271,7 +271,7 @@ const Manage = () => {
     console.log("Updated Data for Sells:", updatedData);
 
     try {
-      const response = await fetch("http://localhost:3000/updateVendor", {
+      const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/updateVendor`, {
         method: "POST", // Use PUT or PATCH based on your backend
         headers: {
           "Content-Type": "application/json",

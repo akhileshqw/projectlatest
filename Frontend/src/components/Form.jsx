@@ -14,7 +14,7 @@ const Form = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = { name: name, email: email, phone: phone, course: course };
-        const response = await fetch("http://localhost:3000/data", {
+        const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/data`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
