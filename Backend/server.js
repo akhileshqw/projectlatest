@@ -20,7 +20,7 @@ dotenv.config({
 });
 
 // console.log(process.env.EMAIL_PASS);
-const jwtSecret = "lasd4831231#^";
+// const jwtSecret = "lasd4831231#^";
 
   // console.log("after check")
 // db connection
@@ -147,7 +147,7 @@ app.post("/createaccount", async (req, res) => {
     // console.log("before jwt");
     jwt.sign(
       userObj,
-      jwtSecret,
+      process.env.JWT_SECRET,
       {
         expiresIn: "2 days",
       },
@@ -247,7 +247,7 @@ app.post("/login-vendor", async (req, res) => {
   if (findUser.password === password) {
     jwt.sign(
       userObj,
-      jwtSecret,
+      process.env.JWT_SECRET,
       {
         //remember me
         expiresIn: "2 days",
@@ -296,7 +296,7 @@ app.post("/login", async (req, res) => {
   if (findUser.password === password) {
     jwt.sign(
       userObj,
-      jwtSecret,
+      process.env.JWT_SECRET,
       {
         expiresIn: "2 days",
       },
@@ -329,7 +329,7 @@ app.get("/profile", (req, res) => {
   const { token } = req.cookies;
   console.log("the user token is", token);
   if (token) {
-    jwt.verify(token, jwtSecret, (err, user) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
       if (err) {
         return res.status(403).json({
           success: false,
