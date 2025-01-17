@@ -5,8 +5,12 @@ import { RegisterModel } from "./models/registerSchema.js";
 import { RatingModal } from "./models/ratingSchema.js";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
-const app = express();
 import nodemailer from "nodemailer";
+import bodyParser from "body-parser";
+
+
+
+const app = express();
 
 
 import dotenv from "dotenv";
@@ -76,6 +80,7 @@ app.use(cors(corsOptions));
 
 
 app.use(express.json());
+app.use(bodyParser.json())
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
@@ -195,9 +200,8 @@ app.post("/createaccount", async (req, res) => {
         if (err) throw err;
         res
           .cookie("token", token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: "strict",
+            secure:false,
+            sameSite: "lax",
           })
           .send({
             success: true,
@@ -263,7 +267,7 @@ app.post("/certifyvendor", async (req, res) => {
     console.log(error);
   }
 });
-
+ 
 app.post("/login-vendor", async (req, res) => {
   const { email, password } = req.body;
   console.log(email, password);
@@ -296,9 +300,8 @@ app.post("/login-vendor", async (req, res) => {
         if (err) throw err;
         res
           .cookie("token", token, {
-            httpOnly: false,
             secure: false,
-            sameSite: "strict",
+            sameSite: "lax",
           })
           .send({
             success: true,
@@ -346,9 +349,8 @@ app.post("/login", async (req, res) => {
         if (err) throw err;
         res
           .cookie("token", token, {
-            httpOnly: true,
             secure: false,
-            sameSite: "strict",
+            sameSite: "lax",
           })
           .send({
             success: true,
