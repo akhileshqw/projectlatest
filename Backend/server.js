@@ -200,7 +200,6 @@ app.post("/createaccount", async (req, res) => {
         if (err) throw err;
         res
           .cookie("token", token, {
-            secure:false,
             sameSite: "lax",
           })
           .send({
@@ -300,7 +299,7 @@ app.post("/login-vendor", async (req, res) => {
         if (err) throw err;
         res
           .cookie("token", token, {
-            secure: false,
+            secure:false,
             sameSite: "lax",
           })
           .send({
@@ -314,7 +313,7 @@ app.post("/login-vendor", async (req, res) => {
     res.send({ success: false, msg: "Incorrect Password" });
   }
 });
-console.log(process.env.JWT_SECRET)
+// console.log(process.env.JWT_SECRET)
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   console.log(email, password);
@@ -349,7 +348,7 @@ app.post("/login", async (req, res) => {
         if (err) throw err;
         res
           .cookie("token", token, {
-            secure: false,
+            secure:false,
             sameSite: "lax",
           })
           .send({
