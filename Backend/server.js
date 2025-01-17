@@ -71,7 +71,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 const corsOptions={
     origin:["https://www.example.com","https://localhost:5173",process.env.FRONTEND_URL],
     credentials:true,
-    methods:["GET","POST"],
+    methods:["GET","POST","PUT"],
     
 }
 
@@ -368,7 +368,7 @@ app.get("/profile", (req, res) => {
   console.log("the cookie is ");
   // console.log(req);
   console.log(req.cookies);
-
+console.log("req is :",req)
   const { token } = req.cookies;
   console.log("the user token is", token);
   if (token) {
