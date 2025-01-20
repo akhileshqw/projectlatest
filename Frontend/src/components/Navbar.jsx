@@ -6,7 +6,7 @@ import { UserCircleIcon } from "lucide-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { LoginUser } = useContext(userContext);
+  let { LoginUser } = useContext(userContext);
   const [ready, setready] = useState(false);
   const handleClick = () => {
     fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/logout`, {
@@ -16,6 +16,7 @@ const Navbar = () => {
       },
       credentials: "include", 
     });
+    LoginUser=null;
     navigate("/");
     window.location.reload();
   };
