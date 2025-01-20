@@ -21,7 +21,12 @@ const Register = () => {
   const { setLoginUser } = useContext(userContext);
   const [lat,setLat]=useState(0);
   const [long,setLong]=useState(0);
-  const genAI = new GoogleGenerativeAI(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}`);
+  const genAI = new GoogleGenerativeAI(`${import.meta.env.VITE_GEMINI_API_KEY}`);
+
+  // console.log(import.meta.env.GEMINI_API_KEY)
+  // console.log
+  // console.log("api key",import.meta.env.VITE_GEMINI_API_KEY)
+  
 
   const {
     register,
@@ -95,10 +100,9 @@ const Register = () => {
 
     // console.log("Data to be address:", data.address); // Debug log
    let ob= await giveCoordinates(data.address)
-    
-      
+ 
    
-    
+       
      
     
 if(ob!=undefined){

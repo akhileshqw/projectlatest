@@ -299,7 +299,7 @@ app.post("/login-vendor", async (req, res) => {
         if (err) throw err;
         res
           .cookie("token", token, {
-            secure:false,
+            secure:true,
             sameSite: "lax",
           })
           .send({
@@ -348,7 +348,7 @@ app.post("/login", async (req, res) => {
         if (err) throw err;
         res
           .cookie("token", token, {
-            secure:false,
+            secure:true,
             sameSite: "lax",
           })
           .send({
@@ -368,7 +368,7 @@ app.get("/profile", (req, res) => {
   console.log("the cookie is ");
   // console.log(req);
   console.log(req.cookies);
-console.log("req is :",req)
+console.log("req is :", req)
   const { token } = req.cookies;
   console.log("the user token is", token);
   if (token) {
