@@ -200,7 +200,9 @@ app.post("/createaccount", async (req, res) => {
         if (err) throw err;
         res
           .cookie("token", token, {
-            sameSite: "lax",
+            sameSite: "none",
+            //modified
+            secure:"true",
           })
           .send({
             success: true,
@@ -300,7 +302,12 @@ app.post("/login-vendor", async (req, res) => {
         res
           .cookie("token", token, {
             secure:true,
-            sameSite: "lax",
+            
+            // sameSite: "lax", abhi
+            sameSite:"none"
+            
+            // sa
+            
           })
           .send({
             success: true,
@@ -349,7 +356,9 @@ app.post("/login", async (req, res) => {
         res
           .cookie("token", token, {
             secure:true,
-            sameSite: "lax",
+            // sameSite: "lax",abhi
+            sameSite:"none",
+
           })
           .send({
             success: true,
