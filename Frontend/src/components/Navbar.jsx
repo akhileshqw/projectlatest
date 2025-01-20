@@ -14,7 +14,7 @@ const Navbar = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
+      credentials: "include", 
     });
     navigate("/");
     window.location.reload();

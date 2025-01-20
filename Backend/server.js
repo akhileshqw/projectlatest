@@ -442,7 +442,11 @@ app.post("/contact", async (req, res) => {
 
 
 app.get("/logout", (req, res) => {
-  res.clearCookie("token").send("Logged out");
+  res.clearCookie("token");
+  // res.redirect('/');
+  
+  // req.clea
+  // res.coo
 });
 
 // modifying
