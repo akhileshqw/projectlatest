@@ -16,10 +16,48 @@ const Navbar = () => {
       },
       credentials: "include", 
     });
-    LoginUser=null;
+    // LoginUser=null;
     navigate("/");
     window.location.reload();
   };
+  // Yes, there is an error in the handleClick function
+  // 1. Direct mutation of LoginUser is incorrect since it's from context
+  // 2. The fetch call response is not being handled
+  // Here's the corrected version:
+  // const handleClick = async () => {
+  //   try {
+  //     const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/logout`, {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       credentials: "include",
+  //     });
+
+  //     if (response.ok) {
+  //       // Use context setter function instead of direct mutation
+  //       // LoginUser should be updated through context
+  //       navigate("/");
+  //       window.location.reload();
+  //     } else {
+  //       console.error("Logout failed");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during logout:", error);
+  //   }
+  // };
+  // Yes, there is an error in the onClick handler of the navbar-toggler button
+  // The onClick={""} is invalid - it's trying to set an empty string as the handler
+  // This state and handler are needed to make the mobile navigation toggle work properly
+  // const [isNavCollapsed, setIsNavCollapsed] = useState(true);
+
+  // const handleNavCollapse = () => {
+  //   setIsNavCollapsed(!isNavCollapsed);
+  // };
+
+  // The isNavCollapsed state should be used in the navbar collapse div like:
+  // <div className={`collapse navbar-collapse ${isNavCollapsed ? '' : 'show'}`}>
+  // This makes the mobile menu toggle work by adding/removing the 'show' class
   useEffect(() => {
     setTimeout(() => {
       setready(true);

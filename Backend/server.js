@@ -7,32 +7,28 @@ import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import nodemailer from "nodemailer";
 import bodyParser from "body-parser";
-
-
+import Cookies from "js-cookie";
 
 const app = express();
-
 
 import dotenv from "dotenv";
 import path from "path";
 import { certifiedVendorModal } from "./models/certifiedvendorSchema.js";
 import { manageProductsModal } from "./models/manageProductsSchema.js";
 
-
 dotenv.config({
   path: "./.env",
 });
 
-const port =process.env.PORT;
+const port = process.env.PORT;
 // console.log(process.env.EMAIL_PASS);
 // const jwtSecret = "lasd4831231#^";
 
-  // console.log("after check")
+// console.log("after check")
 // db connection
 
-
-mongoose.connect(`${process.env.MONGO_STRING}`,{
-  tls:true
+mongoose.connect(`${process.env.MONGO_STRING}`, {
+  tls: true,
 });
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
@@ -43,7 +39,6 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 //   })
 // );
 // app.use(cors());
-
 
 // const corsOptions = {
 //   origin: `${process.env.FRONTEND_URL}`, // Frontend URL
@@ -68,19 +63,20 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 //   res.sendStatus(200);
 // });
 
-const corsOptions={
-    origin:["https://www.example.com","https://localhost:5173",process.env.FRONTEND_URL],
-    credentials:true,
-    methods:["GET","POST","PUT"],
-    
-}
-
+const corsOptions = {
+  origin: [
+    "https://www.example.com",
+    "https://localhost:5173",
+    process.env.FRONTEND_URL,
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT"],
+};
 
 app.use(cors(corsOptions));
 
-
 app.use(express.json());
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.get("/", (req, res) => {
@@ -186,8 +182,8 @@ app.post("/createaccount", async (req, res) => {
       email: email,
       isVendor: isVendor,
       isCertified: iscertified,
-      lat:lat,
-      lng:lng,
+      lat: lat,
+      lng: lng,
     };
     // console.log("before jwt");
     jwt.sign(
@@ -202,7 +198,7 @@ app.post("/createaccount", async (req, res) => {
           .cookie("token", token, {
             sameSite: "none",
             //modified
-            secure:"true",
+            secure: "true",
           })
           .send({
             success: true,
@@ -211,6 +207,7 @@ app.post("/createaccount", async (req, res) => {
           });
       }
     );
+    
     // console.log("after jwt");
     // console.log(res.getHeader())
   } catch (error) {
@@ -268,7 +265,7 @@ app.post("/certifyvendor", async (req, res) => {
     console.log(error);
   }
 });
- 
+
 app.post("/login-vendor", async (req, res) => {
   const { email, password } = req.body;
   console.log(email, password);
@@ -286,8 +283,8 @@ app.post("/login-vendor", async (req, res) => {
     username: findUser.firstname + " " + findUser.lastname,
     isVendor: findUser.isVendor,
     isCertified: findUser.isCertified,
-    lat:findUser.lat,
-    lng:findUser.lng,
+    lat: findUser.lat,
+    lng: findUser.lng,
   };
   if (findUser.password === password) {
     jwt.sign(
@@ -301,13 +298,12 @@ app.post("/login-vendor", async (req, res) => {
         if (err) throw err;
         res
           .cookie("token", token, {
-            secure:true,
-            
+            secure: true,
+
             // sameSite: "lax", abhi
-            sameSite:"none"
-            
+            sameSite: "none",
+
             // sa
-            
           })
           .send({
             success: true,
@@ -340,11 +336,11 @@ app.post("/login", async (req, res) => {
     email: email,
     username: findUser.firstname + " " + findUser.lastname,
     isVendor: findUser.isVendor,
-    lat:findUser.lat,
-    lng:findUser.lng,
+    lat: findUser.lat,
+    lng: findUser.lng,
   };
   if (findUser.password === password) {
-    console.log("before jwt")
+    console.log("before jwt");
     jwt.sign(
       userObj,
       process.env.JWT_SECRET,
@@ -355,10 +351,9 @@ app.post("/login", async (req, res) => {
         if (err) throw err;
         res
           .cookie("token", token, {
-            secure:true,
+            secure: true,
             // sameSite: "lax",abhi
-            sameSite:"none",
-
+            sameSite: "none",
           })
           .send({
             success: true,
@@ -377,7 +372,7 @@ app.get("/profile", (req, res) => {
   console.log("the cookie is ");
   // console.log(req);
   console.log(req.cookies);
-console.log("req is :", req)
+  console.log("req is :", req);
   const { token } = req.cookies;
   console.log("the user token is", token);
   if (token) {
@@ -438,18 +433,55 @@ app.post("/contact", async (req, res) => {
   });
 });
 
-
-
-
 app.get("/logout", (req, res) => {
-  // res.clearCookie("token", { secure: true } );
-  res.status(200).cookie('token',null,{
-         
-        expires:new Date(Date.now())
-        
+  // res.clearCookie("token", { secure: true,sameSite:"none" } );
+  // res.cookie("token", "", {
+  //   expires: new Date(Date.now()), // Set expiration to a past date
+  //   // httpOnly: true,       // Ensure cookie is HttpOnly (if it was set as HttpOnly)
+  //   secure: true, // Use this if the cookie is set as Secure (HTTPS)
+  //   path: "/", // Match the path where the cookie was set
+  //   sameSite: "Strict", // Match the SameSite attribute if set
+  // });
+
+  // cursor
+ 
+  // Clear the cookie and send response
+  try {
+    // First try clearing with domain
+    res.clearCookie('token', {
+      secure: true,
+      sameSite: "none",
+      path: "/",
+      domain: process.env.FRONTEND_URL?.includes("localhost") ? "localhost" : ".vercel.app"
     });
+
+    // Then also try clearing without domain as fallback
+    res.clearCookie('token', {
+      secure: true, 
+      sameSite: "none",
+      path: "/"
+    });
+
+    res.status(200).send({ success: true, msg: "Logged out successfully" });
+  } catch (error) {
+    console.error("Logout error:", error);
+    res.status(500).send({ success: false, msg: "Error during logout" });
+  }
+
+  // res.co
+
+  // res.status(200).cookie('token',null,{
+
+  //       expires:new Date(Date.now())
+
+  //   });
+  // console.log("calling ----")
+  // console.log("ck",Cookies.get());
+  // Cookies.remove('token', { path: '/' });
+  // console.log("ck",Cookies.get());
+
   // res.redirect('/');
-  
+
   // req.clea
   // res.coo
 });
