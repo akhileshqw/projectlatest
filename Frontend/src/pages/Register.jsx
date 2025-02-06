@@ -25,8 +25,56 @@ const Register = () => {
 
   // console.log(import.meta.env.GEMINI_API_KEY)
   // console.log
+
+  const showWelcomeToast = () => {
+    setTimeout(() => {
+      toast.success("Welcome to Milk on the way!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light"
+      });
+    }, 500); // Small delay to ensure toast shows after redirect
+  };
   // console.log("api key",import.meta.env.VITE_GEMINI_API_KEY)
+
+
+
   
+  const accountCreatedd = () => {
+    // Show success toast first
+    toast.success("Account Created Successfully...", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      onClose: () => {
+        // Only navigate after toast is closed
+        navigate("/");
+        // setTimeout(() => {
+        // }, 1500); // Small delay to ensure toast is visible
+      },
+    });
+  };
+  const failedd = (msg) => {
+    setSpinner((prev) => !prev);
+    toast.error(msg || "Registration failed", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
 
   const {
     register,
@@ -50,39 +98,124 @@ const Register = () => {
     alert("Failed to create an account...");
   };
 
-  async function giveCoordinates(location) {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+  // async function giveCoordinates(location) {
+  //   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
   
-    const prompt = `What are the latitude and longitude coordinates for the location: ${location}? If the location cannot be found, provide the coordinates of the nearest identifiable location. Ensure accuracy and clarity in your response.`;
+  //   const prompt = `What are the latitude and longitude coordinates for the location: ${location}? If the location cannot be found, provide the coordinates of the nearest identifiable location. Ensure accuracy and clarity in your response.`;
   
-    try {
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = await response.text();
+  //   try {
+  //     const result = await model.generateContent(prompt);
+  //     const response = await result.response;
+  //     const text = await response.text();
   
       
-      const regex = /([\d.-]+)°/g;
+  //     const regex = /([\d.-]+)°/g;
     
-      const matches = [...text.matchAll(regex)];
+  //     const matches = [...text.matchAll(regex)];
       
-      if (matches.length === 2) {
-        const latitude = parseFloat(matches[0][1]);
-        const longitude = parseFloat(matches[1][1]);
+  //     if (matches.length === 2) {
+  //       const latitude = parseFloat(matches[0][1]);
+  //       const longitude = parseFloat(matches[1][1]);
         
-        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-      let ob=[]
-      ob.push(latitude)
-      ob.push(longitude)
-      return ob
-      } else {
-        console.error("Could not extract coordinates from the response.");
-      }
+  //       console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+  //     let ob=[]
+  //     ob.push(latitude)
+  //     ob.push(longitude)
+  //     return ob
+  //     } else {
+  //       console.error("Could not extract coordinates from the response.");
+  //     }
       
+  //   } catch (error) {
+  //     console.error(" parsing response:", error);
+  //     throw new Error("Failed to retrieve coordinates");
+  //   }
+  // }
+  async function giveCoordinates(location) {
+    try {
+      // Try getting coordinates via Geocoding API
+      const geocodingUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+        location
+      )}&format=json&limit=1`;
+
+      const response = await fetch(geocodingUrl);
+      const data = await response.json();
+
+      if (data && data.length > 0) {
+        const latitude = parseFloat(data[0].lat);
+        const longitude = parseFloat(data[0].lon);
+
+        // Validate coordinates
+        if (
+          !isNaN(latitude) &&
+          !isNaN(longitude) &&
+          latitude >= -90 &&
+          latitude <= 90 &&
+          longitude >= -180 &&
+          longitude <= 180
+        ) {
+          console.log(
+            `Found coordinates for ${location}: ${latitude}, ${longitude}`
+          );
+          return [latitude, longitude];
+        }
+      }
+
+      // If OpenStreetMap fails, try Google Geocoding API as backup
+      const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+      const prompt = `Give me ONLY the exact latitude and longitude coordinates for ${location} in decimal degrees format (e.g. 12.9716° N, 77.5946° E). Provide coordinates for the nearest identifiable location if exact match not found.`;
+
+      const result = await model.generateContent(prompt);
+      const response2 = await result.response;
+      const text = await response2.text();
+
+      // Parse coordinates from response
+      const cardinalRegex = /([\d.-]+)°\s*[NSns],\s*([\d.-]+)°\s*[EWew]/i;
+      const cardinalMatch = text.match(cardinalRegex);
+
+      if (cardinalMatch) {
+        const latitude = parseFloat(cardinalMatch[1]);
+        const longitude = parseFloat(cardinalMatch[2]);
+        if (!isNaN(latitude) && !isNaN(longitude)) {
+          console.log(
+            `Found coordinates via Gemini for ${location}: ${latitude}, ${longitude}`
+          );
+          return [latitude, longitude];
+        }
+      }
+
+      // Final attempt to extract any valid looking coordinates
+      const numberRegex = /([-+]?\d+\.?\d*)/g;
+      const matches = text.match(numberRegex);
+
+      if (matches && matches.length >= 2) {
+        const latitude = parseFloat(matches[0]);
+        const longitude = parseFloat(matches[1]);
+
+        if (
+          !isNaN(latitude) &&
+          !isNaN(longitude) &&
+          latitude >= -90 &&
+          latitude <= 90 &&
+          longitude >= -180 &&
+          longitude <= 180
+        ) {
+          console.log(
+            `Extracted coordinates for ${location}: ${latitude}, ${longitude}`
+          );
+          return [latitude, longitude];
+        }
+      }
+
+      throw new Error("Could not find valid coordinates for the location");
     } catch (error) {
-      console.error(" parsing response:", error);
-      throw new Error("Failed to retrieve coordinates");
+      console.error(`Error finding coordinates for ${location}:`, error);
+      throw error; // Propagate error to caller instead of returning default coordinates
     }
   }
+
   useEffect(() => {
     if (lat !== 0 && long !== 0) {
       console.log("Coordinates updated:", lat, long);
@@ -128,14 +261,14 @@ if(ob!=undefined){
       setSpinner(false)
 
       if (content.success) {
-        accountCreated();
+        accountCreatedd();
         setLoginUser(content.user);
       } else {
-        failed();
+        failedd(content.msg);
       }
     } catch (error) {
       console.error("Error during API request:", error);
-      failed();
+      failedd(error);
     }
   }else{
     alert("failed to fetch location try again later ...")
@@ -146,10 +279,22 @@ if(ob!=undefined){
 
   return (
     <>
+    <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       {resMessage.success ? (
         <>
           {/* <Navigate to={"/"} /> */}
-          {setSpinner(false)}
+          {/* {setSpinner(false)} */}
         </>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -460,4 +605,3 @@ if(ob!=undefined){
 };
 
 export default Register;
-

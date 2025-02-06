@@ -20,7 +20,6 @@ const Navbar = () => {
     navigate("/");
     window.location.reload();
   };
-  // Yes, there is an error in the handleClick function
   // 1. Direct mutation of LoginUser is incorrect since it's from context
   // 2. The fetch call response is not being handled
   // Here's the corrected version:
