@@ -2,15 +2,21 @@ import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast, useToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { userContext } from "../context/userContext";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import {   useNavigate } from "react-router-dom";
+import { useToast } from "../context/ToastContext.jsx";
+
+
+
+
 
 
 
 const Register = () => {
+  const ttoast = useToast();
   const [spinner,setSpinner]=useState(false);
   const [stopSpinner,setStopSpinner]=useState(false);
   const [isVendor, SetIsVendor] = useState(false);
@@ -44,10 +50,10 @@ const Register = () => {
 
 
 
-  
+
   const accountCreatedd = () => {
     // Show success toast first
-    toast.success("Account Created Successfully...", {
+    ttoast.success("Account Created Successfully...", {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
@@ -56,11 +62,11 @@ const Register = () => {
       draggable: true,
       onClose: () => {
         // Only navigate after toast is closed
-        navigate("/");
         // setTimeout(() => {
-        // }, 1500); // Small delay to ensure toast is visible
-      },
-    });
+          // }, 1500); // Small delay to ensure toast is visible
+        },
+      });
+      navigate("/");
   };
   const failedd = (msg) => {
     setSpinner((prev) => !prev);

@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AboutUs from "../src/pages/AboutUs.jsx";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -24,7 +26,7 @@ import RatingList from "./components/RatingList.jsx";
 import Verify from "./components/BecomeCertifiedVendor.jsx";
 import Manage from "./components/Manage.jsx";
 import AboutVendor from "./components/AboutVendor.jsx";
-
+import { ToastProvider } from "./context/ToastContext.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -52,7 +54,11 @@ const router = createBrowserRouter([
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
+  <ToastProvider>
+
+<ToastContainer />
   <UserContextProvider>
     <RouterProvider router={router} />
   </UserContextProvider>
+  </ToastProvider>
 );

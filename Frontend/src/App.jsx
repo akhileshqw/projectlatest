@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import "./styles/homeStyles.css";
 // import { Link } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+
 import { useState, useContext } from "react";
 import { userContext } from "./context/userContext";
 import { Trash, UserCircleIcon } from "lucide-react";
@@ -16,6 +18,18 @@ function App() {
   const navigate = useNavigate();
   return (
     <>
+     <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div
         id="carouselExampleCaptions"
         className="carousel carousel-fade slide mycar smaller"
