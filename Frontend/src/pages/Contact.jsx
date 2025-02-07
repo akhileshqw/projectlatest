@@ -2,14 +2,45 @@ import React, { useEffect } from "react";
 import "../styles/footer.css";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import "react-toastify/dist/ReactToastify.css";
 import { Bounce, ToastContainer, toast } from "react-toastify";
-
+import { useToast } from "../context/ToastContext.jsx";
 const Contact = () => {
   // const [width,setWidth]=useState(window.innerWidth)
-  const notify = (msg) =>
-    toast(msg, {
+  const successToast = (msg) => {
+    toast.success(msg, {
       position: "top-center",
-    });
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      onClose: () => {
+        // Only navigate after toast is closed
+        // setTimeout(() => {
+          // }, 1500); // Small delay to ensure toast is visible
+        },
+      });
+  };
+  const failureToast = (msg) => {
+    toast.error(msg, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      onClose: () => {
+        // Only navigate after toast is closed
+        // setTimeout(() => {
+          // }, 1500); // Small delay to ensure toast is visible
+        },
+      });
+  };
+  // const notify = (msg) =>
+  //   successToast(msg
+  //     // position: "top-center",
+  //   );
   const [resMessage, setresMessage] = useState({});
   const {
     register,
@@ -20,11 +51,12 @@ const Contact = () => {
   } = useForm();
   function emailSent() {
     // alert("Your query has been submitted successfully");
-    notify("Your query has been submitted successfully");
+    // notify("Your query has been submitted successfully");
+    successToast("Your query has been submitted successfully");
   }
-  function failed() {
+  function failure() {
     // alert("Email not sent");
-    notify("Email not sent");
+    failureToast("Failed to send email");
   }
   const onSubmit = async (data) => {
     console.log(data);
@@ -73,7 +105,18 @@ const Contact = () => {
             width: '100%'
           }}
         >
-          <ToastContainer position="top-center" transition={Bounce} />
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
           <div className="container my-4">
             <h2>Contact Us</h2>
             <div className="mb-3">
@@ -184,14 +227,12 @@ const Contact = () => {
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'column-reverse',
-          // display: window.innerWidth <= 768 ? 'none' : 'flex'
         }}>
         
           <img 
             src="support.jpg" 
             alt="Contact us illustration"
             style={{
-              //  display: window.innerWidth <= 768 ? 'none' : 'flex',
               maxWidth: '80%',
               height: 'auto',
               display:"flex",
