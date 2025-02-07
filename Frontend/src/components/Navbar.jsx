@@ -90,7 +90,7 @@ const Navbar = () => {
       >
         <div
           className="container-fluid"
-          style={{ zIndex: "100", backgroundColor: "#333" }}
+          style={{ zIndex: "100",backgroundColor: "rgb(43, 48, 51)" }}
         >
           <Link className="navbar-brand abc task_1" to="/">
             <img
@@ -98,6 +98,7 @@ const Navbar = () => {
               alt="Logo"
               width={82}
               height={50}
+              style={{borderRadius: "100%"}}
               className="d-inline-block align-text-center"
             />
             <div>Milk on the Way</div>

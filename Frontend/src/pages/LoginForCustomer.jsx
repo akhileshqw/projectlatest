@@ -17,37 +17,72 @@ const LoginForCustomer = () => {
     watch,
     formState: { errors, isSubmitting, isSubmitSuccessful, isSubmitted },
   } = useForm();
-  const notify = (msg) =>
-    toast(msg, {
+  // const notify = (msg) =>(
+
+  // );
+
+  const successToast = (msg, path) => {
+    toast.success(msg, {
       position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      onClose: () => {
+        // Only navigate after toast is closed
+        // setTimeout(() => {
+        navigate(path);
+        // }, 1500); // Small delay to ensure toast is visible
+      },
     });
+  };
+  const failureToast = (msg) => {
+    toast.error(msg, {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      onClose: () => {
+        // Only navigate after toast is closed
+        // setTimeout(() => {
+        // }, 1500); // Small delay to ensure toast is visible
+      },
+    });
+  };
 
   const notifyAndRedirect = (msg, redirectPath) => {
     // Show the toast and use the onClose callback for navigation
-    toast(msg, {
-      position: "top-center",
-      onClose: () => navigate(redirectPath), // Navigate after toast is closed
-    });
+    // toast(msg, {
+    //   position: "top-center",
+    //   onClose: () => navigate(redirectPath), // Navigate after toast is closed
+    // });
+    successToast(msg, redirectPath);
+    // const accountCreated = () => {
+    //     alert("Login Successful...");
+    // };
   };
-  // const accountCreated = () => {
-  //     alert("Login Successful...");
-  // };
   // const failed = (msg) => {
   //     alert(msg);
   // };
   const onSubmit = async (data) => {
     // reset();
     console.log(data);
-    let response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/login`, {
-      method: "POST",
+    let response = await fetch(
+      `${import.meta.env.VITE_REACT_APP_BACKEND_BASE_URL}/login`,
+      {
+        method: "POST",
 
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
 
-      body: JSON.stringify(data),
-    });
+        body: JSON.stringify(data),
+      }
+    );
     let content = await response.json();
     // console.log("in the cone");
     // console.log(content);
@@ -58,14 +93,25 @@ const LoginForCustomer = () => {
       notifyAndRedirect("Login Successful...", "/");
     } else {
       // failed(content.msg);
-      notify(content.msg);
+      failureToast(content.msg);
       resetField("password");
     }
   };
 
   return (
     <>
-        <ToastContainer position="top-center" transition={Bounce} />
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div
         className="container d-flex justify-content-center align-items-center"
         style={{ minHeight: "80vh" }}

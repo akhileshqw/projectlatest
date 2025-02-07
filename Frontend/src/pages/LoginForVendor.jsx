@@ -12,10 +12,51 @@ const LoginForVendor = () => {
     const navigate = useNavigate();
   
   const { setLoginUser } = useContext(userContext);
-  const notify = (msg) =>
-    toast(msg, {
+  
+  const successToast = (msg, path) => {
+    toast.success(msg, {
       position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      onClose: () => {
+        // Only navigate after toast is closed
+        // setTimeout(() => {
+        navigate(path);
+        // }, 1500); // Small delay to ensure toast is visible
+      },
     });
+  };
+  const failureToast = (msg) => {
+    toast.error(msg, {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      onClose: () => {
+        // Only navigate after toast is closed
+        // setTimeout(() => {
+        // }, 1500); // Small delay to ensure toast is visible
+      },
+    });
+  };
+
+  const notifyAndRedirect = (msg, redirectPath) => {
+    // Show the toast and use the onClose callback for navigation
+    // toast(msg, {
+    //   position: "top-center",
+    //   onClose: () => navigate(redirectPath), // Navigate after toast is closed
+    // });
+    successToast(msg, redirectPath);
+    // const accountCreated = () => {
+    //     alert("Login Successful...");
+    // };
+  };
+  
   const {
     register,
     handleSubmit,
@@ -24,13 +65,7 @@ const LoginForVendor = () => {
     formState: { errors, isSubmitting, isSubmitSuccessful, isSubmitted },
   } = useForm();
 
-   const notifyAndRedirect = (msg, redirectPath) => {
-      // Show the toast and use the onClose callback for navigation
-      toast(msg, {
-        position: "top-center",
-        onClose: () => navigate(redirectPath), // Navigate after toast is closed
-      });
-    };
+   
   const accountCreated = () => {
     // alert("Login Successful...");
     notify("Login Successful...");
@@ -61,7 +96,7 @@ const LoginForVendor = () => {
       notifyAndRedirect("Login Successful...", "/");
     } else {
       // failed(content.msg);
-      notify(content.msg);
+      failureToast(content.msg);
 
       resetField("password")
     }
