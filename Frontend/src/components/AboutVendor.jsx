@@ -19,6 +19,15 @@ const AboutVendor = () => {
   
   const [vendorProfileData, setVendorProfileData] = useState(null);
   const [tableData, setTableData] = useState(null);
+  const customIcon = new L.Icon({
+    iconUrl: markerIcon,
+    shadowUrl: markerShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    tooltipAnchor: [16, -28],
+    shadowSize: [41, 41]
+  });
 
   const initializeMapWithRoute = (vendor, user) => {
     // Create the map instance and set the initial view
@@ -37,11 +46,12 @@ const AboutVendor = () => {
     const vendorMarker = L.marker([
       vendor.lat,
       vendor.lng,
-    ]).addTo(map);
+    ], { icon: customIcon }).addTo(map);
+
     vendorMarker.bindPopup("<b>Vendor Location</b>").openPopup();
 
     // Create and add marker for user
-    const userMarker = L.marker([user.lat, user.lng]).addTo(
+    const userMarker = L.marker([user.lat, user.lng],{ icon: customIcon }).addTo(
       map
     );
     userMarker.bindPopup("<b>User Location</b>").openPopup();
