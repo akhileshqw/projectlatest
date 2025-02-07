@@ -4,6 +4,8 @@ import { MdOutlineMail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoLocationOutline } from "react-icons/io5";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import "leaflet-routing-machine";
