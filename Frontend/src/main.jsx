@@ -19,6 +19,7 @@ import Ghee from "./pages/Ghee.jsx";
 import Curd from "./pages/Curd.jsx";
 import Skeleton from "react-loading-skeleton";
 import Navbar from "./components/Navbar.jsx";
+import Premium from "./components/Premium.jsx";
 import Layout from "./components/Layout.jsx";
 import Rating from "./components/Rating.jsx";
 import ViewRating from "./components/ViewRating.jsx";
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
       {path:"/verify",element:<Verify/>},
       {path:"/manage-products",element:<Manage/>},
       {path:"/aboutvendor",element:<AboutVendor/>},
+      {path:"/premium",element:<Premium/>},
       
     ],
   },

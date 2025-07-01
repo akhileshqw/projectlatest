@@ -4,6 +4,23 @@ import "./styles/homeStyles.css";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from "react-toastify";
 
+// Preload social media icons
+const socialIcons = [
+  'https://www.heritagefoods.in/static/images/fb.png',
+  'https://www.heritagefoods.in/static/images/tw.png',
+  'https://www.heritagefoods.in/static/images/lk.png',
+  'https://www.heritagefoods.in/static/images/is.png',
+  'https://www.heritagefoods.in/static/images/yt.png'
+];
+
+// Create preload function
+function preloadImages(urls) {
+  urls.forEach(url => {
+    const img = new Image();
+    img.src = url;
+  });
+}
+
 import { useState, useContext } from "react";
 import { userContext } from "./context/userContext";
 import { Trash, UserCircleIcon } from "lucide-react";
@@ -16,8 +33,33 @@ import { Link, useNavigate } from "react-router-dom";
 
 function App() {
   const navigate = useNavigate();
+  const [iconsLoaded, setIconsLoaded] = React.useState(false);
+  
+  // Preload social media icons when component mounts
+  React.useEffect(() => {
+    const loadImages = async () => {
+      try {
+        await Promise.all(socialIcons.map(src => {
+          return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = resolve;
+            img.onerror = reject;
+          });
+        }));
+        setIconsLoaded(true);
+      } catch (error) {
+        console.error('Failed to load some social icons:', error);
+        setIconsLoaded(true); // Still set to true to show fallbacks
+      }
+    };
+    
+    loadImages();
+  }, []);
+  
   return (
     <>
+
      <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -224,20 +266,22 @@ function App() {
             </div>
           </div>
           <div className="row">
-            <div className="col-xs-12 hidden-md hidden-lg hidden-sm">
+            <div className="col-12">
               <img
-                src="https://www.heritagefoods.in/static/images/cowandcalf.png"
-                className="img-responsive"
-                alt=""
+              
+                src="http://www.heritagefoods.in/static/images/cowandcalf.png"
+                className="img-fluid"
+                alt="Cow and Calf"
               />
             </div>
+
           </div>
         </div>
       </div>
       <div className="container d-flex flex-wrap abcdef justify-content-center align-items-center">
         <div
           className="footer-social-section clearfix"
-          style={{ margin: "auto" }}
+          style={{ margin: "auto", opacity: iconsLoaded ? 1 : 0.5, transition: "opacity 0.3s ease" }}
         >
           <ul
             style={{
@@ -245,6 +289,9 @@ function App() {
               gap: "22px 70px",
               alignItems: "center",
               justifyContent: "center",
+              padding: 0,
+              margin: "20px 0",
+              listStyle: "none"
             }}
           >
             <li
@@ -272,7 +319,17 @@ function App() {
               }}
             >
               <Link to="#">
-                <img src="https://www.heritagefoods.in/static/images/fb.png" />
+                <img 
+                  src="https://www.heritagefoods.in/static/images/fb.png" 
+                  width="30" 
+                  height="30" 
+                  alt="Facebook" 
+                  style={{maxWidth: "100%"}} 
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>';
+                  }}
+                />
               </Link>
             </li>
             <li
@@ -287,7 +344,17 @@ function App() {
               }}
             >
               <Link to="#">
-                <img src="https://www.heritagefoods.in/static/images/tw.png" />
+                <img 
+                  src="https://www.heritagefoods.in/static/images/tw.png" 
+                  width="30" 
+                  height="30" 
+                  alt="Twitter" 
+                  style={{maxWidth: "100%"}} 
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>';
+                  }}
+                />
               </Link>
             </li>
             <li
@@ -302,7 +369,17 @@ function App() {
               }}
             >
               <Link to="#">
-                <img src="https://www.heritagefoods.in/static/images/lk.png" />
+                <img 
+                  src="https://www.heritagefoods.in/static/images/lk.png" 
+                  width="30" 
+                  height="30" 
+                  alt="LinkedIn" 
+                  style={{maxWidth: "100%"}} 
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>';
+                  }}
+                />
               </Link>
             </li>
             <li
@@ -317,7 +394,17 @@ function App() {
               }}
             >
               <Link to="#">
-                <img src="https://www.heritagefoods.in/static/images/is.png" />
+                <img 
+                  src="https://www.heritagefoods.in/static/images/is.png" 
+                  width="30" 
+                  height="30" 
+                  alt="Instagram" 
+                  style={{maxWidth: "100%"}} 
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>';
+                  }}
+                />
               </Link>
             </li>
             <li
@@ -332,7 +419,17 @@ function App() {
               }}
             >
               <Link to="#">
-                <img src="https://www.heritagefoods.in/static/images/yt.png" />
+                <img 
+                  src="https://www.heritagefoods.in/static/images/yt.png" 
+                  width="30" 
+                  height="30" 
+                  alt="YouTube" 
+                  style={{maxWidth: "100%"}} 
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>';
+                  }}
+                />
               </Link>
             </li>
           </ul>

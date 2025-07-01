@@ -8,13 +8,16 @@ import cookieParser from "cookie-parser";
 import nodemailer from "nodemailer";
 import bodyParser from "body-parser";
 import Cookies from "js-cookie";
+import https from "https";
+import fs from "fs";
+import path from "path";
 
 const app = express();
 
 import dotenv from "dotenv";
-import path from "path";
 import { certifiedVendorModal } from "./models/certifiedvendorSchema.js";
 import { manageProductsModal } from "./models/manageProductsSchema.js";
+
 
 dotenv.config({
   path: "./.env",
@@ -66,7 +69,8 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 const corsOptions = {
   origin: [
     "https://www.example.com",
-    "https://localhost:5173",
+    "http://localhost:5173",
+    "http://localhost:5174",
     process.env.FRONTEND_URL,
   ],
   credentials: true,
@@ -693,6 +697,124 @@ app.post("/getnormalinfo", async (req, res) => {
   res.send(vendorData);
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+// Check if HTTPS is enabled in the environment
+// Chatbot API endpoints
+import { ChatbotModel } from "./models/chatbotSchema.js";
+
+// Endpoint to get best vendors based on ratings and location
+app.post("/api/chatbot/best-vendors", async (req, res) => {
+  try {
+    const { location, category } = req.body;
+    
+    // Query to find vendors based on category (milk, ghee, curd)
+    let query = { isVendor: true };
+    
+    if (category === "milk") {
+      query.milk = true;
+    } else if (category === "ghee") {
+      query.ghee = true;
+    } else if (category === "curd") {
+      query.curd = true;
+    }
+    
+    // Find vendors and sort by rating (highest first)
+    const vendors = await RegisterModel.find(query)
+      .sort({ rating: -1 })
+      .limit(5);
+    
+    res.status(200).json({
+      success: true,
+      vendors: vendors.map(vendor => ({
+        name: `${vendor.firstname} ${vendor.lastname}`,
+        email: vendor.email,
+        address: vendor.address,
+        rating: vendor.rating,
+        isCertified: vendor.isCertified
+      }))
+    });
+  } catch (error) {
+    console.error("Error finding best vendors:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
 });
+
+// Endpoint to save chatbot conversation
+app.post("/api/chatbot/save-conversation", async (req, res) => {
+  try {
+    const { userId, sessionId, message } = req.body;
+    
+    // Find existing conversation or create new one
+    let conversation = await ChatbotModel.findOne({ sessionId });
+    
+    if (!conversation) {
+      conversation = new ChatbotModel({
+        userId,
+        sessionId,
+        messages: []
+      });
+    }
+    
+    // Add new message to conversation
+    conversation.messages.push(message);
+    conversation.lastUpdated = new Date();
+    
+    await conversation.save();
+    
+    res.status(200).json({ success: true, conversationId: conversation._id });
+  } catch (error) {
+    console.error("Error saving conversation:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+// Endpoint to get account creation steps
+app.get("/api/chatbot/account-steps", (req, res) => {
+  const steps = [
+    {
+      step: 1,
+      title: "Visit the Registration Page",
+      description: "Navigate to the registration page by clicking on 'Register' in the navigation menu."
+    },
+    {
+      step: 2,
+      title: "Fill Personal Information",
+      description: "Enter your first name, last name, email address, phone number, and address."
+    },
+    {
+      step: 3,
+      title: "Create Password",
+      description: "Create a strong password and confirm it."
+    },
+    {
+      step: 4,
+      title: "Select Account Type",
+      description: "Choose whether you're registering as a customer or a vendor."
+    },
+    {
+      step: 5,
+      title: "Complete Registration",
+      description: "Submit the form to create your account."
+    }
+  ];
+  
+  res.status(200).json({ success: true, steps });
+});
+
+if (process.env.HTTPS === 'true') {
+  // For development, we'll use self-signed certificates
+  // In production, you would use proper certificates
+  const options = {
+    key: fs.readFileSync(path.join(process.cwd(), 'server.key')),
+    cert: fs.readFileSync(path.join(process.cwd(), 'server.cert'))
+  };
+
+  // Create HTTPS server
+  https.createServer(options, app).listen(port, () => {
+    console.log(`HTTPS server listening on port ${port}`);
+  });
+} else {
+  // Fallback to HTTP if HTTPS is not enabled
+  app.listen(port, () => {
+    console.log(`HTTP server listening on port ${port}`);
+  });
+}
